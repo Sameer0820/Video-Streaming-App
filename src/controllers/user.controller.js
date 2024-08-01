@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import fs from "fs";
-import { jwt } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 function unlinkPath(avatarLocalPath, coverImageLocalPath) {
     if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
