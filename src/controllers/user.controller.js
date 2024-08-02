@@ -1,7 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import {
+    deleteFromCloudinary,
+    uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
@@ -209,17 +212,17 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true,
         };
 
-        const { accessToken, newRefreshToken } =
+        const { accessToken, refreshToken } =
             await generateAccessandRefreshTokens(user._id);
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", newRefreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .json(
                 new ApiResponse(
                     200,
-                    { accessToken, refreshToken: newRefreshToken },
+                    { accessToken, refreshToken },
                     "Access token refreshed"
                 )
             );
@@ -249,17 +252,19 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
         .status(200)
-        .json(200, req.user, "Current user fetched successfully");
+        .json(
+            new ApiResponse(200, req.user, "Current user fetched successfully")
+        );
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, email } = req.body;
 
     if (!fullName || !email) {
-        throw new ApiError(400, "All fieds are required");
+        throw new ApiError(400, "All fields are required");
     }
 
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
@@ -292,6 +297,17 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error while uploading the avatar");
     }
 
+    const avatarUrl = req.user?.avatar;
+    const regex = /^.*\/([a-z0-9]+).*\.jpg$/;
+    const match = avatarUrl.match(regex);
+
+    if (!match) {
+        throw new ApiError(400, "Couldn't find Public ID of old Avatar");
+    }
+
+    const publicId = match[1];
+    await deleteFromCloudinary(publicId);
+
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
@@ -319,6 +335,17 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading the cover image");
     }
+
+    const coverImageUrl = req.user?.avatar;
+    const regex = /^.*\/([a-z0-9]+).*\.jpg$/;
+    const match = coverImageUrl.match(regex);
+
+    if (!match) {
+        throw new ApiError(400, "Couldn't find Public ID of old cover image");
+    }
+    
+    const publicId = match[1];
+    await deleteFromCloudinary(publicId);
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
