@@ -171,15 +171,15 @@ const deleteComment = asyncHandler(async (req, res) => {
         );
     }
 
-    const deltedComment = await Comment.findByIdAndDelete(commentId);
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
 
-    if (!deltedComment) {
+    if (!deletedComment) {
         throw new ApiError(400, "Error while deleting comment");
     }
 
     return res
         .status(200)
-        .json(new ApiResponse(200, deleteComment, "Comment deleted"));
+        .json(new ApiResponse(200, deletedComment, "Comment deleted successfully"));
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };
