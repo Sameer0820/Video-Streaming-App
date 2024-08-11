@@ -306,7 +306,7 @@ const updateVideo = asyncHandler(async (req, res) => {
             );
         } else {
             const thumbnailUrl = video?.thumbnail;
-            const regex = /^.*\/([a-z0-9]+).*\.jpg$/; //need to check it later
+            const regex = /\/([^/]+)\.[^.]+$/;
             const match = thumbnailUrl.match(regex);
 
             if (!match) {
@@ -327,7 +327,7 @@ const updateVideo = asyncHandler(async (req, res) => {
             $set: {
                 title: title || video?.title,
                 description: description || video?.description,
-                thumbnail: thumbnail || video?.thumbnail,
+                thumbnail: thumbnail.url || video?.thumbnail,
             },
         },
         {
@@ -366,7 +366,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
     const thumbnailUrl = video?.thumbnail;
     const videoFileUrl = video?.videoFile;
-    const regex = /^.*\/([a-z0-9]+).*\.jpg$/; //need to check it later
+    const regex = /\/([^/]+)\.[^.]+$/;
     let match = thumbnailUrl.match(regex);
     if (!match) {
         throw new ApiError(400, "Couldn't find Public ID of thumbnail");

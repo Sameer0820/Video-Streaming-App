@@ -298,7 +298,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     }
 
     const avatarUrl = req.user?.avatar;
-    const regex = /^.*\/([a-z0-9]+).*\.jpg$/;
+    const regex = /\/([^/]+)\.[^.]+$/;
     const match = avatarUrl.match(regex);
 
     if (!match) {
@@ -337,7 +337,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     }
 
     const coverImageUrl = req.user?.avatar;
-    const regex = /^.*\/([a-z0-9]+).*\.jpg$/;
+    const regex = /\/([^/]+)\.[^.]+$/;
     const match = coverImageUrl.match(regex);
 
     if (!match) {
