@@ -272,23 +272,23 @@ const updateVideo = asyncHandler(async (req, res) => {
     const thumbnailLocalPath = req.file?.path;
 
     if (!videoId || !isValidObjectId(videoId)) {
-        unlinkPath(_, thumbnailLocalPath);
+        unlinkPath(null, thumbnailLocalPath);
         throw new ApiError(400, "Invalid video Id");
     }
 
     if (!title && !description && !thumbnailLocalPath) {
-        unlinkPath(_, thumbnailLocalPath);
+        unlinkPath(null, thumbnailLocalPath);
         throw new ApiError(400, "At least one field is required");
     }
 
     const video = await Video.findById(videoId);
     if (!video) {
-        unlinkPath(_, thumbnailLocalPath);
+        unlinkPath(null, thumbnailLocalPath);
         throw new ApiError(404, "Video not found");
     }
 
     if (req.user?._id.toString() !== video?.owner.toString()) {
-        unlinkPath(_, thumbnailLocalPath);
+        unlinkPath(null, thumbnailLocalPath);
         throw new ApiError(
             401,
             "You do not have permission to perform this action"
