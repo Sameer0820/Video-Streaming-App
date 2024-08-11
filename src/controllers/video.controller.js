@@ -381,7 +381,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
     }
 
     publicId = match[1];
-    const deleteVideoFile = await deleteFromCloudinary(publicId);
+    const deleteVideoFile = await deleteFromCloudinary(publicId, "video");
 
     if (deleteThumbnail.result !== "ok") {
         throw new ApiError(
