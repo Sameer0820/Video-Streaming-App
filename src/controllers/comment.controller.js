@@ -124,7 +124,7 @@ const updateComment = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Comment not found");
     }
 
-    if (comment.owner.tostring() !== req.user?._id.toString()) {
+    if (comment.owner.toString() !== req.user?._id.toString()) {
         throw new ApiError(
             401,
             "You do not have permission to update this comment"
@@ -164,7 +164,7 @@ const deleteComment = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Comment not found");
     }
 
-    if (comment.owner.tostring() !== req.user?._id.toString()) {
+    if (comment.owner.toString() !== req.user?._id.toString()) {
         throw new ApiError(
             401,
             "You do not have permission to delete this comment"
