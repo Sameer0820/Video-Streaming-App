@@ -43,7 +43,7 @@ const updateTweet = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Tweet not found");
     }
 
-    if (tweet.owner.tostring() !== req.user?._id.toString()) {
+    if (tweet.owner.toString() !== req.user?._id.toString()) {
         throw new ApiError(
             401,
             "You do not have permission to update this tweet"
@@ -75,20 +75,20 @@ const deleteTweet = asyncHandler(async (req, res) => {
     if (!tweetId || !isValidObjectId(tweetId)) {
         throw new ApiError(400, "Invalid tweet Id");
     }
-    const tweet = await Comment.findById(tweetId);
+    const tweet = await Tweet.findById(tweetId);
 
     if (!tweet) {
         throw new ApiError(500, "Tweet not found");
     }
 
-    if (tweet.owner.tostring() !== req.user?._id.toString()) {
+    if (tweet.owner.toString() !== req.user?._id.toString()) {
         throw new ApiError(
             401,
             "You do not have permission to delete this tweet"
         );
     }
 
-    const deletedTweet = await Comment.findByIdAndDelete(tweetId);
+    const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
 
     if (!deletedTweet) {
         throw new ApiError(400, "Error while deleting tweet");
