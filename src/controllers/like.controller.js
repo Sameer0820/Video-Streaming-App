@@ -143,9 +143,14 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                details: {
+                video: {
                     $first: "$video",
                 },
+            },
+        },
+        {
+            $match: {
+                video: { $exists: true }, // Filter out non-video documents
             },
         },
     ]);
