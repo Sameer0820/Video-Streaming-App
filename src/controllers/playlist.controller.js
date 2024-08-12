@@ -3,11 +3,12 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose, { isValidObjectId } from "mongoose";
 import { Playlist } from "../models/playlist.model.js";
+import { Video } from "../models/video.model.js";
 
 const createPlaylist = asyncHandler(async (req, res) => {
     const { name, description } = req.body;
 
-    if (!name) {
+    if (!name || name.trim() === "") {
         throw new ApiError(400, "Name is required");
     }
 
@@ -71,7 +72,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {
-    const { playlistId, videoId } = req.params;
+    const { videoId, playlistId } = req.params;
 
     if (!playlistId || !isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist id");
@@ -128,7 +129,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
 });
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
-    const { playlistId, videoId } = req.params;
+    const { videoId, playlistId } = req.params;
 
     if (!playlistId || !isValidObjectId(playlistId)) {
         throw new ApiError(400, "Invalid playlist id");
@@ -159,7 +160,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Video not in playlist");
     }
 
-    const removeVideo = await Playlist.findByIdAndDelete(
+    const removeVideo = await Playlist.findByIdAndUpdate(
         playlistId,
         {
             $pull: {
