@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import Navbar from "./components/Navbar/Navbar";
+import { Outlet } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-    This is VideoTube
-    </>
-  )
+    return (
+        <div className="flex flex-wrap bg-gray-400">
+            <div className="w-full block">
+                <Navbar />
+                <main>
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+    );
 }
 
-export default App
+export default App;
