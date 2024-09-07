@@ -21,14 +21,16 @@ function Search() {
         >
             <div className="relative flex-grow">
                 <Input
+                    className="rounded-l-3xl"
                     placeholder="Search"
                     {...register("query", { required: true })}
                 />
-                <GoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <GoSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-200" />
             </div>
             <Button
                 type="submit"
-                className="w-full rounded-r-3xl hover:bg-gray-500 transition-colors"
+                bgColor="bg-zinc-800"
+                className="rounded-r-3xl hover:bg-gray-500 transition-colors outline-none border-gray-200 border"
             >
                 Search
             </Button>
