@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import "./index.css";
 import store from "./store/store.js";
 import Home from "./pages/Home.jsx";
+import Search from "./pages/Search.jsx";
 
 const router = createBrowserRouter([
     {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "/search/:query",
+                element: <Search />,
             },
         ],
     },
