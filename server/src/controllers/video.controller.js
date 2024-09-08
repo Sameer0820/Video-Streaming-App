@@ -24,23 +24,23 @@ const getAllVideos = asyncHandler(async (req, res) => {
         sortType = "desc",
     } = req.query;
 
-    if (!query || query.trim() === "") {
-        throw new ApiError(400, "Query is required");
-    }
-
     const videos = await Video.aggregate([
-        {
-            $match: {
-                $or: [
-                    {
-                        title: { $regex: query, $options: "i" },
-                    },
-                    {
-                        description: { $regex: query, $options: "i" },
-                    },
-                ],
-            },
-        },
+        ...(query
+            ? [
+                  {
+                      $match: {
+                          $or: [
+                              {
+                                  title: { $regex: query, $options: "i" },
+                              },
+                              {
+                                  description: { $regex: query, $options: "i" },
+                              },
+                          ],
+                      },
+                  },
+              ]
+            : []),
         {
             $lookup: {
                 from: "users",
@@ -56,6 +56,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
                         },
                     },
                 ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner",
+                },
             },
         },
         {
