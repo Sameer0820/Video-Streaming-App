@@ -8,10 +8,10 @@ function VideoCard({ video }) {
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
 
     return (
-        <div className="md:w-[25vw] w-[90vw] rounded mb-3 mt-2 text-white mx-3 relative">
+        <div className="2xl:w-[18vw] md:w-[25vw] w-[90vw] rounded mb-3 mt-2 text-white mx-3 relative">
             <Link to={`/watchpage/${video?._id}`}>
                 <img
-                    className="w-full h-[14vw] object-cover mb-3 rounded-xl border border-gray-800"
+                    className="w-full md:h-[14vw] 2xl:h-[10vw] object-cover mb-3 rounded-xl border border-gray-800"
                     src={video?.thumbnail}
                     alt={video?.title}
                 />
@@ -29,7 +29,7 @@ function VideoCard({ video }) {
                 </Link>
                 <Link to={`/watchpage/${video?._id}`}>
                     <div className="ml-4">
-                        <h2 className="text-xl font-semibold">
+                        <h2 className="text-lg font-semibold">
                             {video?.title}
                         </h2>
                         <h2 className="text-gray-200">
