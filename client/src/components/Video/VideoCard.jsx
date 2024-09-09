@@ -1,11 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import getTimeDistanceToNow from "../../utils/getTimeDistance.js";
 import formatDuration from "../../utils/formatDuration.js";
 
 function VideoCard({ video }) {
     const formattedDuration = formatDuration(parseInt(video?.duration));
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
+    const navigate = useNavigate();
+
+    const handleChannelClick = (e) => {
+        e.preventDefault();
+        navigate(`/channel/${video?.owner?.username}`);
+    };
 
     return (
         <Link to={`/watchpage/${video?._id}`}>
@@ -19,13 +25,13 @@ function VideoCard({ video }) {
                     {formattedDuration}
                 </p>
                 <div className="flex">
-                    <Link to={`/channel/${video?.owner?.username}`}>
+                    <div onClick={handleChannelClick}>
                         <img
                             className="w-9 h-9 bg-gray-100 rounded-full object-cover"
                             src={video?.owner?.avatar}
                             alt={video?.owner?.fullname}
                         />
-                    </Link>
+                    </div>
                     <div className="ml-4">
                         <h2 className="text-lg font-semibold">
                             {video?.title}

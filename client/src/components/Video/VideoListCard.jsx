@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import getTimeDistanceToNow from "../../utils/getTimeDistance.js";
 import formatDuration from "../../utils/formatDuration.js";
 
@@ -17,6 +17,13 @@ function VideoListCard({
 }) {
     const formattedDuration = formatDuration(parseInt(video?.duration));
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
+    const navigate = useNavigate();
+
+    const handleChannelClick = (e) => {
+        e.preventDefault();
+        navigate(`/channel/${video?.owner?.username}`);
+    };
+
     return (
         <div className={`${mainDivWidth} ${divBorder}`}>
             <Link to={`/watchpage/${video?._id}`}>
@@ -39,7 +46,7 @@ function VideoListCard({
                                 {video?.title}
                             </h1>
                             <p className="mb-2 text-gray-400 text-[0.85rem]">{`${video?.views} views • ${timeDistance}`}</p>
-                            <Link to={`/channel/${video?.owner?.username}`}>
+                            <div onClick={handleChannelClick}>
                                 <div className="flex items-center mb-2  text-[0.95rem]">
                                     <img
                                         className="w-9 h-9 mr-3 rounded-full object-cover"
@@ -50,7 +57,7 @@ function VideoListCard({
                                         {video?.owner?.username}
                                     </p>
                                 </div>
-                            </Link>
+                            </div>
                             {showVideoDescription && (
                                 <span>
                                     <p

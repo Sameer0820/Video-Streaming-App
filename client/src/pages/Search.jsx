@@ -10,11 +10,11 @@ function Search() {
     const { query } = useParams();
 
     const fetchVideos = async () => {
+        setError("");
         try {
             const response = await axios.get(`/api/v1/videos?query=${query}`, {
                 withCredentials: true,
             });
-            console.log(response)
             if (response.data.data?.length > 0) {
                 setVideos(response.data.data);
             } else {

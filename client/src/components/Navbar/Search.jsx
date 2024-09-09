@@ -10,7 +10,6 @@ function Search() {
     const navigate = useNavigate();
 
     const onSubmit = (data) => {
-        console.log(data);
         navigate(`/search/${data?.query}`);
     };
 
