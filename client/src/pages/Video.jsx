@@ -5,14 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { setVideo } from "../store/videoSlice.js";
 import { useParams } from "react-router-dom";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
+import VideoInfo from "../components/Video/VideoInfo.jsx";
 
 function Video() {
     const dispatch = useDispatch();
-    const [myVideo, setMyVideo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const { videoId } = useParams();
     const { videos } = useSelector((state) => state.videos);
+    const { video } = useSelector((state) => state.video);
 
     const fetchVideo = async () => {
         setError("");
@@ -21,7 +22,6 @@ function Video() {
                 withCredentials: true,
             });
             if (response?.data?.data) {
-                setMyVideo(response.data.data);
                 dispatch(setVideo(response.data.data));
             }
         } catch (error) {
@@ -49,8 +49,11 @@ function Video() {
                                     {error}
                                 </p>
                             ) : (
-                                <VideoPlayer videoFile={myVideo.videoFile} />
+                                <VideoPlayer key={video._id} videoFile={video.videoFile} />
                             )}
+                        </div>
+                        <div>
+                            <VideoInfo video={video}/>
                         </div>
                     </div>
                     <div className="w-[30%]">
@@ -67,7 +70,7 @@ function Video() {
                                     titleFont=""
                                     showVideoDescription={false}
                                     paddingY="py-1"
-                                    marginLeft = "ml-2"
+                                    marginLeft="ml-2"
                                     marginLeft2="ml-2"
                                     avatarHeight="h-7"
                                     avatarWidth="w-7"

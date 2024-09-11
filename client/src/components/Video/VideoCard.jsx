@@ -29,7 +29,7 @@ function VideoCard({ video }) {
                         <img
                             className="w-9 h-9 bg-gray-100 rounded-full object-cover"
                             src={video?.owner?.avatar}
-                            alt={video?.owner?.fullname}
+                            alt={video?.owner?.fullName}
                         />
                     </div>
                     <div className="ml-4">
@@ -37,7 +37,7 @@ function VideoCard({ video }) {
                             {video?.title}
                         </h2>
                         <h2 className="text-gray-200">
-                            {video?.owner?.username}
+                            {video?.owner?.fullName}
                         </h2>
                         <p className="text-gray-300 text-[0.95rem]">{`${video?.views} views • ${timeDistance}`}</p>
                     </div>
