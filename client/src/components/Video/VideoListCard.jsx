@@ -12,7 +12,12 @@ function VideoListCard({
     titleSize = "text-[1.2rem]",
     showVideoDescription = true,
     descriptionWidth = "w-[40vw]",
-    divBorder = "",
+    paddingY = "py-2",
+    marginLeft = "ml-10",
+    marginLeft2 = "ml-4",
+    avatarWidth = "w-9",
+    avatarHeight = "h-9",
+    textFont = "",
     video,
 }) {
     const formattedDuration = formatDuration(parseInt(video?.duration));
@@ -25,21 +30,21 @@ function VideoListCard({
     };
 
     return (
-        <div className={`${mainDivWidth} ${divBorder}`}>
+        <div className={`${mainDivWidth}`}>
             <Link to={`/watchpage/${video?._id}`}>
-                <div className="py-2  hover:bg-zinc-900">
-                    <div className="text-white ml-10 py-2 flex">
+                <div className={`${paddingY} hover:bg-zinc-900 rounded-lg`}>
+                    <div className={`text-white ${marginLeft} flex`}>
                         <div className="relative">
                             <img
                                 className={`${imgWidth} ${imgHeight} object-cover rounded-xl`}
                                 src={video?.thumbnail}
                                 alt={video?.title}
                             />
-                            <p className="absolute bottom-2 right-4">
+                            <p className={`absolute bottom-1 right-3 ${textFont}`}>
                                 {formattedDuration}
                             </p>
                         </div>
-                        <div className="ml-4 w-[37%]">
+                        <div className={`${marginLeft2}`}>
                             <h1
                                 className={`${titleFont} ${titleWidth} ${titleSize}`}
                             >
@@ -47,9 +52,9 @@ function VideoListCard({
                             </h1>
                             <p className="mb-2 text-gray-400 text-[0.85rem]">{`${video?.views} views • ${timeDistance}`}</p>
                             <div onClick={handleChannelClick}>
-                                <div className="flex items-center mb-2  text-[0.95rem]">
+                                <div className="flex items-center mb-2 text-[0.95rem]">
                                     <img
-                                        className="w-9 h-9 mr-3 rounded-full object-cover"
+                                        className={`${avatarWidth} ${avatarHeight} mr-3 rounded-full object-cover`}
                                         src={`${video?.owner?.avatar}`}
                                         alt={video?.owner?.fullname}
                                     />

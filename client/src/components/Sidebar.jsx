@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { GoHome } from "react-icons/go";
 import { AiOutlineMessage } from "react-icons/ai";
 import { BiLike } from "react-icons/bi";
@@ -12,42 +12,48 @@ import { GoQuestion } from "react-icons/go";
 
 function Sidebar() {
     const authStatus = useSelector((state) => state.auth.status);
+    const location = useLocation();
+    const isWatchPage = location.pathname.includes("/watchpage");
 
     const NavElements = [
         {
             name: "Home",
             route: "/",
-            icon: <GoHome className="w-5 h-5"/>,
+            icon: <GoHome className="w-6 h-6" />,
         },
         {
             name: "Liked videos",
             route: "/liked-videos",
-            icon: <BiLike className="w-5 h-5"/>,
+            icon: <BiLike className="w-6 h-6" />,
         },
         {
             name: "Tweets",
             route: "/tweets",
-            icon: <AiOutlineMessage className="w-5 h-5"/>,
+            icon: <AiOutlineMessage className="w-6 h-6" />,
         },
         {
             name: "History",
             route: "/history",
-            icon: <GoHistory className="w-5 h-5"/>,
+            icon: <GoHistory className="w-6 h-6" />,
         },
         {
             name: "Collection",
             route: "/collection",
-            icon: <BsCollectionPlay className="w-5 h-5"/>,
+            icon: <BsCollectionPlay className="w-6 h-6" />,
         },
         {
             name: "My Content",
             route: "/my-content",
-            icon: <GoDeviceCameraVideo className="w-5 h-5"/>,
+            icon: <GoDeviceCameraVideo className="w-6 h-6" />,
         },
     ];
 
     return (
-        <div className="bg-black text-white h-full flex flex-col border border-y-0 border-l-0">
+        <div
+            className={`bg-black text-white h-full flex flex-col border border-y-0 border-l-0 transition-all duration-100 ease-in-out  ${
+                isWatchPage ? "w-16" : "w-64"
+            }`}
+        >
             <ul className="flex-grow px-2 py-2">
                 {NavElements.map((item, index) => (
                     <NavLink
@@ -57,11 +63,19 @@ function Sidebar() {
                         to={item.route}
                         key={index}
                     >
-                        <li className="py-2 px-5 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg">
+                        <li
+                            className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
+                                isWatchPage ? "justify-center " : " px-5"
+                            }`}
+                        >
                             {item.icon && (
-                                <span className="mr-2">{item.icon}</span>
+                                <span
+                                    className={`${isWatchPage ? "" : "mr-2"}`}
+                                >
+                                    {item.icon}
+                                </span>
                             )}
-                            {item.name}
+                            {!isWatchPage && <div>{item.name}</div>}
                         </li>
                     </NavLink>
                 ))}
@@ -73,11 +87,15 @@ function Sidebar() {
                     }
                     to="/support"
                 >
-                    <li className="py-2 px-5 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg">
-                        <span className="mr-2">
-                            <GoQuestion className="w-5 h-5"/>
+                    <li
+                        className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
+                            isWatchPage ? "justify-center " : " px-5"
+                        }`}
+                    >
+                        <span className={`${isWatchPage ? "" : "mr-2"}`}>
+                            <GoQuestion className="w-6 h-6" />
                         </span>
-                        Support
+                        {!isWatchPage && "Support"}
                     </li>
                 </NavLink>
                 <NavLink
@@ -86,11 +104,15 @@ function Sidebar() {
                     }
                     to="/setting"
                 >
-                    <li className="py-2 px-5 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg">
-                        <span className="mr-2">
-                            <FiSettings className="w-5 h-5"/>
+                    <li
+                        className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
+                            isWatchPage ? "justify-center " : " px-5"
+                        }`}
+                    >
+                        <span className={`${isWatchPage ? "" : "mr-2"}`}>
+                            <FiSettings className="w-6 h-6" />
                         </span>
-                        Settings
+                        {!isWatchPage && "Settings"}
                     </li>
                 </NavLink>
             </ul>

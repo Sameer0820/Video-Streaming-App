@@ -6,6 +6,7 @@ import "./index.css";
 import store from "./store/store.js";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
+import Video from "./pages/Video.jsx";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
             {
                 path: "/search/:query",
                 element: <Search />,
+            },
+            {
+                path: "/watchpage/:videoId",
+                element: <Video />,
             },
         ],
     },

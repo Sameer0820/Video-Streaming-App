@@ -21,7 +21,7 @@ function VideoCard({ video }) {
                     src={video?.thumbnail}
                     alt={video?.title}
                 />
-                <p className="absolute bottom-24 right-6 ">
+                <p className="absolute bottom-24 right-4 ">
                     {formattedDuration}
                 </p>
                 <div className="flex">

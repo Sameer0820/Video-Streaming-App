@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import VideoCard from "./VideoCard";
-import { addVideos } from "../../store/videosSlice";
+import { addVideos } from "../../store/videosSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { FaVideo } from "react-icons/fa";
 import axios from "axios";
 
 function VideoContainer() {
     const dispatch = useDispatch();
-    const {videos} = useSelector((state) => state.videos);
+    const { videos } = useSelector((state) => state.videos);
 
     const getData = async () => {
         try {
-            const response = await axios.get(
-                "/api/v1/videos",
-                { withCredentials: true }
-            );
+            const response = await axios.get("/api/v1/videos", {
+                withCredentials: true,
+            });
             if (response?.data?.data?.length > 0) {
                 dispatch(addVideos(response?.data?.data));
             }
@@ -24,9 +23,7 @@ function VideoContainer() {
     };
 
     useEffect(() => {
-        if (!videos) {
-            getData();
-        }
+        getData();
     }, [videos]);
 
     if (!videos || videos?.length === 0) {
