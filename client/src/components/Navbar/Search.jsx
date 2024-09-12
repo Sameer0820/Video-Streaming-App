@@ -20,7 +20,7 @@ function Search() {
         >
             <div className="relative flex-grow">
                 <Input
-                    className="rounded-l-3xl"
+                    className="rounded-l-3xl px-8"
                     placeholder="Search"
                     {...register("query", { required: true })}
                 />

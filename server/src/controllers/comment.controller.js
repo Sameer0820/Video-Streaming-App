@@ -36,6 +36,13 @@ const getVideoComments = asyncHandler(async (req, res) => {
             },
         },
         {
+            $addFields: {
+                owner: {
+                    $first: "$owner",
+                },
+            },
+        },
+        {
             $lookup: {
                 from: "likes",
                 localField: "_id",
@@ -58,6 +65,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
                 likesCount: 1,
                 content: 1,
                 owner: 1,
+                createdAt: 1,
             },
         },
         {
@@ -68,7 +76,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         },
     ]);
 
-    if (!getComments || getComments.length == 0) {
+    if (!getComments) {
         throw new ApiError(501, "No comments found");
     }
 
@@ -179,7 +187,9 @@ const deleteComment = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, deletedComment, "Comment deleted successfully"));
+        .json(
+            new ApiResponse(200, deletedComment, "Comment deleted successfully")
+        );
 });
 
 export { getVideoComments, addComment, updateComment, deleteComment };

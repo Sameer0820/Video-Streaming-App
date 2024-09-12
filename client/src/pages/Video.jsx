@@ -6,6 +6,7 @@ import { setVideo } from "../store/videoSlice.js";
 import { useParams } from "react-router-dom";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
 import VideoInfo from "../components/Video/VideoInfo.jsx";
+import Comments from "../components/Comments.jsx";
 
 function Video() {
     const dispatch = useDispatch();
@@ -54,6 +55,9 @@ function Video() {
                         </div>
                         <div>
                             <VideoInfo video={video}/>
+                        </div>
+                        <div>
+                            <Comments video={video}/>
                         </div>
                     </div>
                     <div className="w-[30%]">
