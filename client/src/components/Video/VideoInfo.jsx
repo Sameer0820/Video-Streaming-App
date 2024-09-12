@@ -59,7 +59,11 @@ function VideoInfo({ video }) {
                         </div>
                     </div>
                 </div>
-                <Button className="flex h-10 items-center bg-gray-100 hover:bg-gray-300 text-black px-2 rounded-full">
+                <Button
+                    className="flex h-10 items-center hover:bg-gray-300 px-2 rounded-full"
+                    textColor="text-black"
+                    bgColor="bg-gray-100"
+                >
                     <p className="mr-2 font-semibold">Subscribe</p>
                     <FaBell />
                 </Button>
