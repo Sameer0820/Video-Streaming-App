@@ -7,8 +7,13 @@ import store from "./store/store.js";
 import Home from "./pages/Home.jsx";
 import Search from "./pages/Search.jsx";
 import Video from "./pages/Video.jsx";
+import Login from "./pages/Login.jsx";
 
 const router = createBrowserRouter([
+    {
+        path: "/login",
+        element: <Login />,
+    },
     {
         path: "/",
         element: <App />,
