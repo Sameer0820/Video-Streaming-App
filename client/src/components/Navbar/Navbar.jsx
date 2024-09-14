@@ -32,8 +32,8 @@ function Navbar() {
 
             {authStatus && userData && (
                 <img
-                    src={userData.user.avatar}
-                    alt={userData.user.username}
+                    src={userData.avatar}
+                    alt={userData.username}
                     className="object-cover h-16 w-16 shrink-0 rounded-full sm:h-12 sm:w-12"
                 ></img>
             )}

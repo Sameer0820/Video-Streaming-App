@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addCurrentUser } from "../store/userSlice";
+import { setUser } from "../store/authSlice";
 
 export const getCurrentUser = async (dispatch) => {
     try {
@@ -7,7 +7,7 @@ export const getCurrentUser = async (dispatch) => {
             withCredentials: true,
         });
         if (response?.data?.data) {
-            dispatch(addCurrentUser(res.data.data));
+            dispatch(setUser(response.data.data));
             return response.data;
         }
     } catch (error) {

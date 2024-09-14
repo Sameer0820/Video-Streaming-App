@@ -30,7 +30,7 @@ function Login() {
                 withCredentials: true,
             });
             if (response?.data?.data) {
-                dispatch(setUser(response.data.data));
+                dispatch(setUser(response.data.data.user));
                 toast.success(response.data.message + "🤩");
                 navigate("/");
             }
