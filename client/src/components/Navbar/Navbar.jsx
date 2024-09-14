@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 function Navbar() {
     const authStatus = useSelector((state) => state.auth.status);
     const userData = useSelector((state) => state.auth.userData);
-    console.log(userData)
 
     return (
         <nav className="flex justify-between items-center bg-black p-4">
