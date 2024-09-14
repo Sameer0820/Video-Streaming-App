@@ -8,7 +8,7 @@ import axios from "axios";
 import Logo from "../Logo";
 import Input from "../Input";
 import Button from "../Button";
-import {icons} from "../../assets/Icons.jsx";
+import { icons } from "../../assets/Icons.jsx";
 
 function Login() {
     const dispatch = useDispatch();
@@ -45,7 +45,9 @@ function Login() {
         <div className="h-screen w-full overflow-y-auto bg-[#121212] text-white">
             <div className="mx-auto my-28 flex w-full max-w-sm flex-col px-4">
                 <div className="mx-auto inline-block">
-                    <Logo />
+                    <Link to="/">
+                        <Logo />
+                    </Link>
                 </div>
                 <div className="my-4 w-full text-center text-xl font-semibold">
                     Log in to your account
@@ -104,7 +106,7 @@ function Login() {
                         type="submit"
                         disabled={loading}
                         className="mt-5 disabled:cursor-not-allowed py-2 rounded-lg"
-                        bgColor="bg-pink-600"
+                        bgColor={loading?"bg-pink-800": "bg-pink-600"}
                     >
                         {loading ? <span>{icons.loading}</span> : "Sign in"}
                     </Button>

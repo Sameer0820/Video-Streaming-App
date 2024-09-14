@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 function Navbar() {
     const authStatus = useSelector((state) => state.auth.status);
     const userData = useSelector((state) => state.auth.userData);
+    console.log(userData)
 
     return (
         <nav className="flex justify-between items-center bg-black p-4">
@@ -32,8 +33,8 @@ function Navbar() {
 
             {authStatus && userData && (
                 <img
-                    src={userData.avatar}
-                    alt={userData.username}
+                    src={userData.user.avatar}
+                    alt={userData.user.username}
                     className="object-cover h-16 w-16 shrink-0 rounded-full sm:h-12 sm:w-12"
                 ></img>
             )}
