@@ -153,10 +153,15 @@ const getLikedVideos = asyncHandler(async (req, res) => {
                 video: { $exists: true }, // Filter out non-video documents
             },
         },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
     ]);
 
-    if (!likedVideos?.length) {
-        throw new ApiError(500, "No liked videos found for this user");
+    if (!likedVideos) {
+        throw new ApiError(500, "Error while fetching liked videos");
     }
 
     return res

@@ -35,7 +35,15 @@ function Login() {
                 navigate("/");
             }
         } catch (error) {
-            setError(error.message);
+            if (error.status === 401) {
+                setError("Invalid password");
+            } else if (error.status === 500) {
+                setError("Server is not working");
+            } else if (error.status === 404) {
+                setError("User does not exist");
+            } else {
+                setError(error.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -53,7 +61,7 @@ function Login() {
                     Log in to your account
                 </div>
                 {error && (
-                    <p className="text-red-600 mt-8 text-center">{error}</p>
+                    <p className="text-red-600 mt-4 text-center">{error}</p>
                 )}
                 <form
                     onSubmit={handleSubmit(login)}
@@ -106,7 +114,7 @@ function Login() {
                         type="submit"
                         disabled={loading}
                         className="mt-5 disabled:cursor-not-allowed py-2 rounded-lg"
-                        bgColor={loading?"bg-pink-800": "bg-pink-600"}
+                        bgColor={loading ? "bg-pink-800" : "bg-pink-600"}
                     >
                         {loading ? <span>{icons.loading}</span> : "Sign in"}
                     </Button>

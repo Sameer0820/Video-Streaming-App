@@ -9,6 +9,7 @@ import Search from "./pages/Search.jsx";
 import Video from "./pages/Video.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
+import LikedVideos from "./pages/LikedVideos.jsx";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path: "/watchpage/:videoId",
                 element: <Video />,
+            },
+            {
+                path: "/liked-videos",
+                element: <LikedVideos />,
             },
         ],
     },

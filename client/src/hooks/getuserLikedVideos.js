@@ -7,7 +7,7 @@ export const getUserLikedVideos = async (dispatch) => {
             withCredentials: true,
         });
         if (response?.data?.data) {
-            dispatch(addUserLikedVideos(res.data.data));
+            dispatch(addUserLikedVideos(response.data.data));
             return response.data;
         }
     } catch (error) {

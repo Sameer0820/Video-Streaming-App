@@ -66,7 +66,7 @@ function VideoListCard({
                             {showVideoDescription && (
                                 <span>
                                     <p
-                                        className={`${descriptionWidth} text-gray-300 text-[0.90rem]`}
+                                        className={`${descriptionWidth} text-gray-300 text-[0.90rem] line-clamp-2`}
                                     >
                                         {video?.description}
                                     </p>

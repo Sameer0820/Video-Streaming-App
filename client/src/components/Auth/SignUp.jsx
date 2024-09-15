@@ -43,7 +43,11 @@ function SignUp() {
                 navigate("/login");
             }
         } catch (error) {
-            setError(error.message);
+            if (error.status === 409) {
+                setError("User with email or username already exists");
+            } else {
+                setError(error.message);
+            }
         } finally {
             setLoading(false);
         }
@@ -205,7 +209,7 @@ function SignUp() {
                         type="submit"
                         disabled={loading}
                         className="mt-5 disabled:cursor-not-allowed py-2 rounded-lg"
-                        bgColor={loading?"bg-pink-800": "bg-pink-600"}
+                        bgColor={loading ? "bg-pink-800" : "bg-pink-600"}
                     >
                         {loading ? <span>{icons.loading}</span> : "Sign Up"}
                     </Button>
