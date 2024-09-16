@@ -475,6 +475,11 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                             },
                         },
                     },
+                    {
+                        $sort: {
+                            updatedAt: -1,
+                        },
+                    },
                 ],
             },
         },

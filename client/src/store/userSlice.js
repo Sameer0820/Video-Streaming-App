@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: null,
-    currentUser: null,
     userVideo: null,
     userPlaylist: null,
     userTweets: null,
     userLikedVideos: null,
+    userHistory: null,
 };
 
 const userSlice = createSlice({
@@ -15,9 +15,6 @@ const userSlice = createSlice({
     reducers: {
         addUser: (state, action) => {
             state.user = action.payload;
-        },
-        addCurrentUser: (state, action) => {
-            state.currentUser = action.payload;
         },
         addUserVideo: (state, action) => {
             state.userVideo = action.payload;
@@ -31,16 +28,19 @@ const userSlice = createSlice({
         addUserLikedVideos: (state, action) => {
             state.userLikedVideos = action.payload;
         },
+        addUserHistory: (state, action) => {
+            state.userHistory = action.payload;
+        },
     },
 });
 
 export const {
     addUser,
-    addCurrentUser,
     addUserVideo,
     addUserPlaylist,
     addUserTweets,
     addUserLikedVideos,
+    addUserHistory,
 } = userSlice.actions;
 
 export default userSlice.reducer;
