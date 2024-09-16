@@ -34,8 +34,8 @@ function Navbar() {
                 <img
                     src={userData.avatar}
                     alt={userData.username}
-                    className="object-cover h-16 w-16 shrink-0 rounded-full sm:h-12 sm:w-12"
-                ></img>
+                    className="object-cover h-10 w-10 shrink-0 rounded-full"
+                />
             )}
         </nav>
     );

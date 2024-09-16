@@ -50,6 +50,7 @@ function App() {
                     <Outlet />
                 </main>
             </div>
+            <div id="popup-models" className="bg-pink-400 relative"></div>
             <ToastContainer
                 position="top-right"
                 autoClose={2000}

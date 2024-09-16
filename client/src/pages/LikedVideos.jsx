@@ -4,18 +4,27 @@ import { getUserLikedVideos } from "../hooks/getuserLikedVideos";
 import VideoListCard from "../components/Video/VideoListCard";
 import { BiLike } from "react-icons/bi";
 import { icons } from "../assets/Icons.jsx";
+import GuestLikedVideos from "../components/GuestPages/GuestLikedVideos.jsx";
+import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
 
 function LikedVideos() {
     const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
+    const status = useSelector((state) => state.auth.status);
 
     useEffect(() => {
-        getUserLikedVideos(dispatch).then(() => {
-            setLoading(false);
-        });
-    }, []);
+        if (status) {
+            getUserLikedVideos(dispatch).then(() => {
+                setLoading(false);
+            });
+        }
+    }, [status]);
 
     const likedVideos = useSelector((state) => state.user.userLikedVideos);
+
+    if (!status) {
+        return <GuestLikedVideos />;
+    }
 
     return (
         <>
@@ -36,21 +45,16 @@ function LikedVideos() {
                     </div>
                 ))}
             {likedVideos?.length < 1 && !loading && (
-                <div className="w-full flex justify-center">
-                    <div className="flex relative top-20 justify-center p-4">
-                        <div className="w-full max-w-fit text-center">
-                            <p className="mb-3 w-full">
-                                <span className="inline-flex w-36 h-36 rounded-full bg-slate-900 p-2">
-                                    <BiLike className="w-32 h-32" />
-                                </span>
-                            </p>
-                            <h5 className="mt-6 mb-2 text-2xl font-semibold">
-                                Empty Liked Videos
-                            </h5>
-                            <p> You have no previously liked videos</p>
-                        </div>
-                    </div>
-                </div>
+                <GuestComponent
+                    icon={
+                        <span className="w-full h-full flex items-center p-4 pb-5">
+                            <BiLike className="w-32 h-32" />
+                        </span>
+                    }
+                    title="Empty Liked Videos"
+                    subtitle="You have no previously liked videos"
+                    guest={false}
+                />
             )}
         </>
     );
