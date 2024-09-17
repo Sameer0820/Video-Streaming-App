@@ -103,7 +103,7 @@ function LoginPopup({ route, message = "Login to continue..." }, ref) {
                                 <IoClose className="w-7 h-7" />
                             </button>
                             <Logo />
-                            <h6 className="mx-auto mt-10 mb-2 text-2xl font-semibold">
+                            <h6 className="mx-auto mt-6 mb-2 text-2xl font-semibold">
                                 {message}
                             </h6>
                             <h6 className="mx-auto text-md mb-3">

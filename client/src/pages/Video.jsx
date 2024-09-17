@@ -15,6 +15,7 @@ function Video() {
     const { videoId } = useParams();
     const { videos } = useSelector((state) => state.videos);
     const { video } = useSelector((state) => state.video);
+    const authStatus = useSelector((state) => state.auth.status);
 
     const fetchVideo = async () => {
         setError("");
@@ -35,7 +36,7 @@ function Video() {
 
     useEffect(() => {
         fetchVideo();
-    }, [videoId]);
+    }, [videoId, authStatus]);
 
     return (
         <div>

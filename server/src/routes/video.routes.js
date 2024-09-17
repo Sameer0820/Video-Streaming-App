@@ -8,12 +8,13 @@ import {
     updateVideo,
 } from "../controllers/video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { checkUser } from "../middlewares/openAuth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
 router.route("/").get(getAllVideos);
-router.route("/:videoId").get(getVideoById);
+router.route("/:videoId").get(checkUser, getVideoById);
 
 router.use(verifyJWT);
 
