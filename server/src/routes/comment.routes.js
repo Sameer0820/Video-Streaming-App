@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { checkUser } from "../middlewares/openAuth.middleware.js";
 import {
     addComment,
     deleteComment,
@@ -9,7 +10,7 @@ import {
 
 const router = Router();
 
-router.route("/:videoId").get(getVideoComments);
+router.route("/:videoId").get(checkUser, getVideoComments);
 
 router.use(verifyJWT);
 

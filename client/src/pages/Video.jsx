@@ -3,6 +3,7 @@ import VideoPlayer from "../components/Video/VideoPlayer";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setVideo } from "../store/videoSlice.js";
+import { addVideos } from "../store/videosSlice.js";
 import { useParams } from "react-router-dom";
 import VideoListCard from "../components/Video/VideoListCard.jsx";
 import VideoInfo from "../components/Video/VideoInfo.jsx";
@@ -34,8 +35,22 @@ function Video() {
         }
     };
 
+    const fetchVideos = async () => {
+        try {
+            const response = await axios.get("/api/v1/videos", {
+                withCredentials: true,
+            });
+            if (response?.data?.data?.length > 0) {
+                dispatch(addVideos(response?.data?.data));
+            }
+        } catch (error) {
+            console.log("Error fetching videos", error);
+        }
+    };
+
     useEffect(() => {
         fetchVideo();
+        if (!videos) fetchVideos();
     }, [videoId, authStatus]);
 
     return (
@@ -55,10 +70,10 @@ function Video() {
                             )}
                         </div>
                         <div>
-                            <VideoInfo video={video}/>
+                            <VideoInfo video={video} />
                         </div>
                         <div>
-                            <Comments video={video}/>
+                            <Comments video={video} />
                         </div>
                     </div>
                     <div className="w-[30%]">

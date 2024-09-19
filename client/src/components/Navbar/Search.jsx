@@ -6,11 +6,12 @@ import Input from "../Input";
 import Button from "../Button";
 
 function Search() {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const navigate = useNavigate();
 
     const onSubmit = (data) => {
         navigate(`/search/${data?.query}`);
+        reset();
     };
 
     return (

@@ -42,10 +42,7 @@ function getTimeDistanceToNow(date) {
         }
         return `${minutes} minutes ago`;
     } else {
-        if (seconds === 1) {
-            return `${seconds} second ago`;
-        }
-        return `${seconds} seconds ago`;
+        return `Just now`;
     }
 }
 

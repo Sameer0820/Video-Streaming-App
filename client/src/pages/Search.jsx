@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import VideoListCard from "../components/Video/VideoListCard";
+import GuestComponent from "../components/GuestPages/GuestComponent";
+import { IoPlayOutline } from "react-icons/io5";
 
 function Search() {
     const [videos, setVideos] = useState([]);
-    const [error, setError] = useState("");
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const { query } = useParams();
 
@@ -17,11 +19,28 @@ function Search() {
             });
             if (response.data.data?.length > 0) {
                 setVideos(response.data.data);
-            } else {
-                setError("No videos found!");
             }
         } catch (error) {
-            setError("An error occurred while fetching videos");
+            if (error.status === 404) {
+                setError(
+                    <GuestComponent
+                        title="No videos found"
+                        subtitle="There are no videos here for your search result. Please try to search something else."
+                        icon={
+                            <span className="w-full h-full flex items-center p-4 pb-5">
+                                <IoPlayOutline className="w-32 h-32" />
+                            </span>
+                        }
+                        guest={false}
+                    />
+                );
+            } else {
+                setError(
+                    <p className="flex text-xl justify-center mt-20">
+                        An error occured while fetching videos.
+                    </p>
+                );
+            }
         } finally {
             setLoading(false);
         }
@@ -38,7 +57,7 @@ function Search() {
             ) : (
                 <div>
                     {error ? (
-                        <p className="flex text-xl justify-center mt-20">{error}</p>
+                        error
                     ) : (
                         videos.map((video) => (
                             <div key={video?._id}>
