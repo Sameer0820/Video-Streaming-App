@@ -12,6 +12,7 @@ import SignUp from "./pages/SignUp.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import History from "./pages/History.jsx";
 import Settings from "./pages/Settings.jsx";
+import Support from "./pages/Support.jsx";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "/settings",
                 element: <Settings />,
+            },
+            {
+                path: "/support",
+                element: <Support />,
             },
         ],
     },

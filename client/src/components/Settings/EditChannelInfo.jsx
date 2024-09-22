@@ -28,7 +28,6 @@ function EditChannelInfo() {
                 newData,
                 { withCredentials: true }
             );
-            console.log(response.data.data);
             dispatch(setUser(response.data.data));
             toast.success(response.data.message);
         } catch (error) {
