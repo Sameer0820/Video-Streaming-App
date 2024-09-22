@@ -11,6 +11,7 @@ import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import LikedVideos from "./pages/LikedVideos.jsx";
 import History from "./pages/History.jsx";
+import Settings from "./pages/Settings.jsx";
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: "/history",
                 element: <History />,
+            },
+            {
+                path: "/settings",
+                element: <Settings />,
             },
         ],
     },

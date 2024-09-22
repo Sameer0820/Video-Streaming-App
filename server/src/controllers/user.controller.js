@@ -239,7 +239,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
 
     if (!isPasswordCorrect) {
-        throw new ApiError(400, "Invalid old password");
+        throw new ApiError(400, "Incorrect old password");
     }
     user.password = newPassword;
     await user.save({ validateBeforeSave: false });
@@ -258,18 +258,27 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    const { fullName, email } = req.body;
+    const { fullName, email, username, description } = req.body;
 
-    if (!fullName || !email) {
-        throw new ApiError(400, "All fields are required");
+    if (!fullName && !email && !username && !description) {
+        throw new ApiError(400, "At least one field is required");
+    }
+
+    if (username) {
+        const isExist = await User.find({ username });
+        if (isExist?.length > 0) {
+            throw new ApiError(409, "Username not available");
+        }
     }
 
     const user = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
-                fullName: fullName,
-                email: email,
+                fullName: fullName || req.user.fullName,
+                email: email || req.user.email,
+                username: username || req.user.username,
+                description: description || req.user.description,
             },
         },
         {
@@ -336,7 +345,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error while uploading the cover image");
     }
 
-    const coverImageUrl = req.user?.avatar;
+    const coverImageUrl = req.user?.coverImage;
     const regex = /\/([^/]+)\.[^.]+$/;
     const match = coverImageUrl.match(regex);
 

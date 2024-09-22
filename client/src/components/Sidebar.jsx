@@ -120,7 +120,7 @@ function Sidebar() {
                     className={({ isActive }) =>
                         `${isActive ? "text-pink-700" : "text-gray-200"}`
                     }
-                    to="/setting"
+                    to="/settings"
                 >
                     <li
                         className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
