@@ -15,16 +15,17 @@ function unlinkPath(avatarLocalPath, coverImageLocalPath) {
     if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
 }
 
-const generateAccessandRefreshTokens = async (userId) => {
+const generateAccessandRefreshTokens = async (userId, val = 0) => {
     try {
         const user = await User.findById(userId);
         const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
-
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false });
-
-        return { accessToken, refreshToken };
+        if (val === 0) {
+            const refreshToken = user.generateRefreshToken();
+            user.refreshToken = refreshToken;
+            await user.save({ validateBeforeSave: false });
+            return { accessToken, refreshToken };
+        }
+        return { accessToken };
     } catch (error) {
         throw new ApiError(
             500,
@@ -212,19 +213,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true,
         };
 
-        const { accessToken, refreshToken } =
-            await generateAccessandRefreshTokens(user._id);
+        const { accessToken } = await generateAccessandRefreshTokens(
+            user._id,
+            1
+        );
 
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
             .json(
-                new ApiResponse(
-                    200,
-                    { accessToken, refreshToken },
-                    "Access token refreshed"
-                )
+                new ApiResponse(200, { accessToken }, "Access token refreshed")
             );
     } catch (error) {
         throw new ApiError(401, error?.message || "Invalid refresh token");

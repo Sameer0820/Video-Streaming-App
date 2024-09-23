@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { parseErrorMessage } from "./parseErrorMsg";
 
 const axiosInstance = axios.create({
     baseURL: "/api/v1",
@@ -27,10 +27,11 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     async (error) => {
+        const errorMsg = parseErrorMessage(error.response.data);
         const originalRequest = error.config;
         if (
             error.response.status === 401 &&
-            error.response.data.message === "TokenExpiredError" &&
+            errorMsg === "TokenExpiredError" &&
             !originalRequest._retry
         ) {
             originalRequest._retry = true;
@@ -47,8 +48,6 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
             } catch (err) {
                 console.error("Failed to refresh token", err);
-                const navigate = useNavigate();
-                navigate("/login");
                 toast.error("Session expired. Please login again!");
             }
         }
