@@ -3,7 +3,7 @@ import VideoCard from "./VideoCard";
 import { addVideos } from "../../store/videosSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { FaVideo } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper.js";
 
 function VideoContainer() {
     const dispatch = useDispatch();
@@ -11,9 +11,7 @@ function VideoContainer() {
 
     const getData = async () => {
         try {
-            const response = await axios.get("/api/v1/videos", {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get("/videos");
             if (response?.data?.data?.length > 0) {
                 dispatch(addVideos(response?.data?.data));
             }
@@ -24,7 +22,7 @@ function VideoContainer() {
 
     useEffect(() => {
         getData();
-    }, [videos]);
+    }, []);
 
     if (!videos || videos?.length === 0) {
         return (

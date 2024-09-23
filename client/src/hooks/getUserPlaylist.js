@@ -1,11 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper";
 import { addUserPlaylist } from "../store/userSlice";
 
 export const userPlaylist = async (dispatch, userId) => {
     try {
-        const response = await axios.get(`/api/v1/playlist/user/${userId}`, {
-            withCredentials: true,
-        });
+        const response = await axiosInstance.get(`/playlist/user/${userId}`);
         if (response?.data?.data) {
             dispatch(addUserPlaylist(response.data.data));
             return response.data;

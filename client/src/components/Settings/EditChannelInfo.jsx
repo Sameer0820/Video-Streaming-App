@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import Button from "../Button";
 import { toast } from "react-toastify";
 import { setUser } from "../../store/authSlice";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper";
 
 function EditChannelInfo() {
     const userData = useSelector((state) => state.auth.userData);
@@ -23,10 +23,9 @@ function EditChannelInfo() {
             newData = { ...newData, username: "" };
         }
         try {
-            const response = await axios.patch(
-                `/api/v1/users/update-account`,
-                newData,
-                { withCredentials: true }
+            const response = await axiosInstance.patch(
+                `/users/update-account`,
+                newData
             );
             dispatch(setUser(response.data.data));
             toast.success(response.data.message);
@@ -84,7 +83,7 @@ function EditChannelInfo() {
                         <div className="relative">
                             <textarea
                                 placeholder="Enter your channel description"
-                                id="desc"
+                                name="desc"
                                 type="text"
                                 className="w-full px-2 py-1.5 border rounded-lg bg-transparent"
                                 rows="3"

@@ -5,7 +5,7 @@ import { setUser } from "../../store/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper.js";
 import Logo from "../Logo";
 import Input from "../Input";
 import Button from "../Button";
@@ -52,11 +52,13 @@ function LoginPopup({ route, message = "Login to continue..." }, ref) {
         setError("");
         setLoading(true);
         try {
-            const response = await axios.post("/api/v1/users/login", data, {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.post("/users/login", data);
             if (response?.data?.data) {
                 dispatch(setUser(response.data.data.user));
+                localStorage.setItem(
+                    "accessToken",
+                    response.data.data.accessToken
+                );
                 toast.success(response.data.message + "🤩");
                 if (route) {
                     navigate(route);

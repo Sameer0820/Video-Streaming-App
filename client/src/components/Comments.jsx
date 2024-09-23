@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper.js";
 import { useSelector } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 import getTimeDistanceToNow from "../utils/getTimeDistance";
@@ -33,9 +33,7 @@ function Comments({ video }) {
 
     const getVideoComments = async () => {
         try {
-            const response = await axios.get(`/api/v1/comments/${videoId}`, {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get(`/comments/${videoId}`);
             if (response?.data?.data) {
                 setComments(response.data.data);
                 setLoading(false);
@@ -50,11 +48,9 @@ function Comments({ video }) {
             LoginPopupDialog.current.open();
         } else {
             try {
-                await axios.post(
-                    `/api/v1/comments/${videoId}`,
-                    { content: data.content },
-                    { withCredentials: true }
-                );
+                await axiosInstance.post(`/comments/${videoId}`, {
+                    content: data.content,
+                });
                 reset();
                 setCommentsUpdated((prev) => !prev);
             } catch (error) {
@@ -66,9 +62,7 @@ function Comments({ video }) {
 
     const handleCommentDelete = async (commentId) => {
         try {
-            await axios.delete(`/api/v1/comments/c/${commentId}`, {
-                withCredentials: true,
-            });
+            await axiosInstance.delete(`/comments/c/${commentId}`);
             setCommentsUpdated((prev) => !prev);
         } catch (error) {
             toast.error("Couldn't delete comment. Try again!");
@@ -78,11 +72,9 @@ function Comments({ video }) {
 
     const handleCommentUpdate = async (data, commentId) => {
         try {
-            await axios.patch(
-                `/api/v1/comments/c/${commentId}`,
-                { content: data.newContent },
-                { withCredentials: true }
-            );
+            await axiosInstance.patch(`/comments/c/${commentId}`, {
+                content: data.newContent,
+            });
             setUpdate(null);
             setCommentsUpdated((prev) => !prev);
         } catch (error) {
@@ -100,8 +92,8 @@ function Comments({ video }) {
             LoginLikePopupDialog.current.open();
         } else {
             try {
-                const response = await axios.post(
-                    `/api/v1/likes/toggle/c/${commentId}`
+                const response = await axiosInstance.post(
+                    `/likes/toggle/c/${commentId}`
                 );
                 if (response.data.success) {
                     setComments((prevComments) =>

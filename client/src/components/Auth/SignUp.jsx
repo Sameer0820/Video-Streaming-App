@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper.js";
 import Logo from "../Logo";
 import Input from "../Input";
 import Button from "../Button";
@@ -31,12 +31,9 @@ function SignUp() {
         setError("");
         setLoading(true);
         try {
-            const response = await axios.post(
-                "/api/v1/users/register",
-                formData,
-                {
-                    withCredentials: true,
-                }
+            const response = await axiosInstance.post(
+                "/users/register",
+                formData
             );
             if (response?.data?.data) {
                 toast.success("Account created successfully 🥳");

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper";
 import { setUser } from "../store/authSlice";
 import Button from "../components/Button";
 import EditPersonalInfo from "../components/Settings/EditPersonalInfo";
@@ -33,10 +33,9 @@ function Settings() {
         const formData = new FormData();
         formData.append("coverImage", data.coverImage[0]);
         try {
-            const response = await axios.patch(
-                "/api/v1/users/cover-image",
-                formData,
-                { withCredentials: true }
+            const response = await axiosInstance.patch(
+                "/users/cover-image",
+                formData
             );
             if (response.data?.data?.coverImage) {
                 dispatch(
@@ -57,10 +56,9 @@ function Settings() {
         const formData = new FormData();
         formData.append("avatar", data.avatar[0]);
         try {
-            const response = await axios.patch(
-                "/api/v1/users/avatar",
-                formData,
-                { withCredentials: true }
+            const response = await axiosInstance.patch(
+                "/users/avatar",
+                formData
             );
             if (response.data?.data?.coverImage) {
                 dispatch(

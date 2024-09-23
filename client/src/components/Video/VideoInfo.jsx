@@ -13,7 +13,7 @@ import Button from "../Button";
 import { useSelector, useDispatch } from "react-redux";
 import { setVideo } from "../../store/videoSlice";
 import LoginPopup from "../Auth/LoginPopup";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
 
 function VideoInfo({ video }) {
@@ -34,8 +34,8 @@ function VideoInfo({ video }) {
             LoginLikePopupDialog.current.open();
         } else {
             try {
-                const response = await axios.post(
-                    `/api/v1/likes/toggle/v/${video._id}`
+                const response = await axiosInstance.post(
+                    `/likes/toggle/v/${video._id}`
                 );
                 if (response.data.success) {
                     dispatch(
@@ -60,8 +60,8 @@ function VideoInfo({ video }) {
             LoginSubsPopupDialog.current.open();
         } else {
             try {
-                const response = await axios.post(
-                    `/api/v1/subscriptions/c/${video.owner._id}`
+                const response = await axiosInstance.post(
+                    `/subscriptions/c/${video.owner._id}`
                 );
                 if (response.data.success) {
                     dispatch(

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import VideoPlayer from "../components/Video/VideoPlayer";
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper.js";
 import { useSelector, useDispatch } from "react-redux";
 import { setVideo } from "../store/videoSlice.js";
 import { addVideos } from "../store/videosSlice.js";
@@ -21,9 +21,7 @@ function Video() {
     const fetchVideo = async () => {
         setError("");
         try {
-            const response = await axios.get(`/api/v1/videos/${videoId}`, {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get(`/videos/${videoId}`);
             if (response?.data?.data) {
                 dispatch(setVideo(response.data.data));
             }
@@ -37,9 +35,7 @@ function Video() {
 
     const fetchVideos = async () => {
         try {
-            const response = await axios.get("/api/v1/videos", {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get("/videos");
             if (response?.data?.data?.length > 0) {
                 dispatch(addVideos(response?.data?.data));
             }
@@ -66,7 +62,10 @@ function Video() {
                                     {error}
                                 </p>
                             ) : (
-                                <VideoPlayer key={video._id} videoFile={video.videoFile} />
+                                <VideoPlayer
+                                    key={video._id}
+                                    videoFile={video.videoFile}
+                                />
                             )}
                         </div>
                         <div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper";
 import VideoListCard from "../components/Video/VideoListCard";
 import GuestComponent from "../components/GuestPages/GuestComponent";
 import { IoPlayOutline } from "react-icons/io5";
@@ -14,9 +14,7 @@ function Search() {
     const fetchVideos = async () => {
         setError("");
         try {
-            const response = await axios.get(`/api/v1/videos?query=${query}`, {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get(`/videos?query=${query}`);
             if (response.data.data?.length > 0) {
                 setVideos(response.data.data);
             }
@@ -56,15 +54,13 @@ function Search() {
                 <p className="flex text-xl justify-center mt-20">Loading...</p>
             ) : (
                 <div>
-                    {error ? (
-                        error
-                    ) : (
-                        videos.map((video) => (
-                            <div key={video?._id}>
-                                <VideoListCard video={video} />
-                            </div>
-                        ))
-                    )}
+                    {error
+                        ? error
+                        : videos.map((video) => (
+                              <div key={video?._id}>
+                                  <VideoListCard video={video} />
+                              </div>
+                          ))}
                 </div>
             )}
         </div>

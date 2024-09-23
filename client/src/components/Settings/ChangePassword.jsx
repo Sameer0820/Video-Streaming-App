@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import Button from "../Button";
 import { toast } from "react-toastify";
-import { setUser } from "../../store/authSlice";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper";
 
 function ChangePassword() {
-    const userData = useSelector((state) => state.auth.userData);
-    const dispatch = useDispatch();
-
     const defaultValues = {
         oldPassword: "",
         newPassword: "",
@@ -30,10 +25,9 @@ function ChangePassword() {
             return;
         }
         try {
-            const response = await axios.post(
-                `/api/v1/users/change-password`,
-                newdata,
-                { withCredentials: true }
+            const response = await axiosInstance.post(
+                `/users/change-password`,
+                newdata
             );
             toast.success(response.data.message);
         } catch (error) {

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { GoMail } from "react-icons/go";
 import Button from "../Button";
-import axios from "axios";
+import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
 import { setUser } from "../../store/authSlice";
 
@@ -26,10 +26,9 @@ function EditPersonalInfo() {
 
     const handleSaveChange = async (data) => {
         try {
-            const response = await axios.patch(
-                `/api/v1/users/update-account`,
-                data,
-                { withCredentials: true }
+            const response = await axiosInstance.patch(
+                `/users/update-account`,
+                data
             );
             dispatch(setUser(response.data.data));
             toast.success(response.data.message);
@@ -84,6 +83,7 @@ function EditPersonalInfo() {
                             <input
                                 placeholder="Enter your email address"
                                 type="email"
+                                id="email"
                                 className="w-full pr-2 py-1.5 pl-10 border rounded-lg bg-transparent"
                                 required
                                 defaultValue={userData.email}

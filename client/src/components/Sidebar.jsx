@@ -62,6 +62,7 @@ function Sidebar() {
                 { withCredentials: true }
             );
             dispatch(unSetUser());
+            localStorage.removeItem("accessToken");
             toast.success("Logged out successfully...");
             navigate("/");
         } catch (error) {
@@ -116,23 +117,25 @@ function Sidebar() {
                         {!isWatchPage && "Logout"}
                     </li>
                 )}
-                <NavLink
-                    className={({ isActive }) =>
-                        `${isActive ? "text-pink-700" : "text-gray-200"}`
-                    }
-                    to="/settings"
-                >
-                    <li
-                        className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
-                            isWatchPage ? "justify-center " : " px-5"
-                        }`}
+                {authStatus && (
+                    <NavLink
+                        className={({ isActive }) =>
+                            `${isActive ? "text-pink-700" : "text-gray-200"}`
+                        }
+                        to="/settings"
                     >
-                        <span className={`${isWatchPage ? "" : "mr-2"}`}>
-                            <FiSettings className="w-6 h-6" />
-                        </span>
-                        {!isWatchPage && "Settings"}
-                    </li>
-                </NavLink>
+                        <li
+                            className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
+                                isWatchPage ? "justify-center " : " px-5"
+                            }`}
+                        >
+                            <span className={`${isWatchPage ? "" : "mr-2"}`}>
+                                <FiSettings className="w-6 h-6" />
+                            </span>
+                            {!isWatchPage && "Settings"}
+                        </li>
+                    </NavLink>
+                )}
                 <NavLink
                     className={({ isActive }) =>
                         `${isActive ? "text-pink-700" : "text-gray-200"}`
