@@ -48,6 +48,8 @@ axiosInstance.interceptors.response.use(
                 return axiosInstance(originalRequest);
             } catch (err) {
                 console.error("Failed to refresh token", err);
+                localStorage.removeItem("accessToken");
+                window.location.reload();
                 toast.error("Session expired. Please login again!");
             }
         }
