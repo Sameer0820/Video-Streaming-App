@@ -5,7 +5,7 @@ export const getUserProfile = async (dispatch, username) => {
     try {
         const response = await axiosInstance.get(`/users/c/${username}`);
         if (response?.data?.data) {
-            dispatch(addUser(res.data.data));
+            dispatch(addUser(response.data.data));
             return response.data;
         }
     } catch (error) {

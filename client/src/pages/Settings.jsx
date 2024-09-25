@@ -119,7 +119,7 @@ function Settings() {
             </div>
             <div className="px-4 pb-4">
                 <div className="flex flex-wrap gap-4 pb-4 pt-6">
-                    <div className="relative -mt-12 inline-block h-28 w-28 shrink-0 overflow-hidden rounded-full border-2">
+                    <div className="relative -mt-12 inline-block h-32 w-32 shrink-0 overflow-hidden rounded-full border-2">
                         <img
                             src={userData.avatar}
                             alt="image"
@@ -175,7 +175,7 @@ function Settings() {
                             onClick={() =>
                                 navigate(`/channel/${userData.username}`)
                             }
-                            className="mr-1 group/btn flex items-center gap-x-2 text-center font-bold transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] rounded-md hover:bg-pink-600"
+                            className="mr-1 font-semibold transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] rounded-md hover:bg-pink-600"
                             bgColor="bg-pink-700"
                         >
                             View Channel

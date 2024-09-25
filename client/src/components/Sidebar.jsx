@@ -10,12 +10,13 @@ import { BsCollectionPlay } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { GoQuestion } from "react-icons/go";
 import { GrLogout } from "react-icons/gr";
-import axios from "axios";
+import axiosInstance from "../utils/axios.helper";
 import { unSetUser } from "../store/authSlice";
 import { toast } from "react-toastify";
 
 function Sidebar() {
     const authStatus = useSelector((state) => state.auth.status);
+    const userData = useSelector((state) => state.auth.userData);
     const location = useLocation();
     const isWatchPage = location.pathname.includes("/watchpage");
     const navigate = useNavigate();
@@ -49,18 +50,14 @@ function Sidebar() {
         },
         {
             name: "My Content",
-            route: "/my-content",
+            route: `/channel/${userData?.username}`,
             icon: <GoDeviceCameraVideo className="w-6 h-6" />,
         },
     ];
 
     const handleLogout = async () => {
         try {
-            await axios.post(
-                "/api/v1/users/logout",
-                {},
-                { withCredentials: true }
-            );
+            await axiosInstance.post("/users/logout", {});
             dispatch(unSetUser());
             localStorage.removeItem("accessToken");
             toast.success("Logged out successfully...");

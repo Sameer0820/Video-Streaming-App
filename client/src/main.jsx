@@ -13,6 +13,7 @@ import LikedVideos from "./pages/LikedVideos.jsx";
 import History from "./pages/History.jsx";
 import Settings from "./pages/Settings.jsx";
 import Support from "./pages/Support.jsx";
+import Channel from "./pages/Channel.jsx";
 
 const router = createBrowserRouter([
     {
@@ -54,6 +55,24 @@ const router = createBrowserRouter([
             {
                 path: "/support",
                 element: <Support />,
+            },
+            {
+                path: "/channel/:username",
+                element: <Channel />,
+                children: [
+                    {
+                        path: "/channel/:username/tweets",
+                    },
+                    {
+                        path: "/channel/:username/playlist",
+                    },
+                    {
+                        path: "/channel/:username/subscribers",
+                    },
+                    {
+                        path: "/channel/:username/about",
+                    },
+                ],
             },
         ],
     },

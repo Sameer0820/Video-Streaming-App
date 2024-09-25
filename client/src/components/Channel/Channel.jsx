@@ -1,0 +1,218 @@
+import React, { useEffect, useRef, useState } from "react";
+import {
+    NavLink,
+    Outlet,
+    useParams,
+    useNavigate,
+    useLocation,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { icons } from "../../assets/Icons.jsx";
+import { getUserProfile } from "../../hooks/getUserProfile";
+import { MdOutlineEdit } from "react-icons/md";
+import Button from "../Button.jsx";
+import { FaBell, FaCheckCircle } from "react-icons/fa";
+import axiosInstance from "../../utils/axios.helper";
+import LoginPopup from "../Auth/LoginPopup.jsx";
+
+function Channel() {
+    const dispatch = useDispatch();
+    const { username } = useParams();
+    const navigate = useNavigate();
+    const [profile, setProfile] = useState(null);
+    const { status, userData } = useSelector((state) => state.auth);
+    const LoginPopupDialog = useRef();
+    const location = useLocation();
+
+    useEffect(() => {
+        getUserProfile(dispatch, username).then((res) => {
+            setProfile(res.data);
+        });
+    }, [status]);
+
+    const toggleSubscribe = async () => {
+        try {
+            const response = await axiosInstance.post(
+                `/subscriptions/c/${profile._id}`
+            );
+            if (response.data.success) {
+                setProfile({
+                    ...profile,
+                    isSubscribed: !profile.isSubscribed,
+                    subscribersCount: profile.isSubscribed
+                        ? profile.subscribersCount - 1
+                        : profile.subscribersCount + 1,
+                });
+            }
+        } catch (error) {
+            toast.error("Error while toggling subscribe button");
+            console.log(error);
+        }
+    };
+
+    return profile ? (
+        <section className="relative w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">
+            <div className="relative min-h-[150px] w-full pt-[20%]">
+                <div className="absolute inset-0 overflow-hidden">
+                    <img
+                        src={profile?.coverImage}
+                        alt="user"
+                        className="object-cover"
+                    />
+                </div>
+            </div>
+
+            <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-4 pb-4 pt-6">
+                    <span className="relative -mt-12 inline-block h-32 w-32 shrink-0 overflow-hidden rounded-full border-2">
+                        <img
+                            src={profile?.avatar}
+                            alt="image"
+                            className="h-full w-full object-cover"
+                        />
+                    </span>
+                    <div className="mr-auto inline-block">
+                        <h1 className="font-bold text-xl">
+                            {profile?.fullName}
+                        </h1>
+                        <p className="text-sm text-gray-400">
+                            @{profile?.username}
+                        </p>
+                        <p className="text-sm text-gray-400">
+                            {profile?.subscribersCount} Subscribers ·{" "}
+                            {profile?.channelsSubscribedToCount} Subscribed
+                        </p>
+                    </div>
+                    <div className="inline-block">
+                        {status === true ? (
+                            userData?.username === profile?.username ? (
+                                <Button
+                                    onClick={() => navigate("/settings")}
+                                    className="mr-1 flex items-center font-semibold transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] rounded-md hover:bg-pink-600"
+                                    bgColor="bg-pink-700"
+                                >
+                                    <MdOutlineEdit />
+                                    <p className="ml-2 font-semibold"> Edit</p>
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={toggleSubscribe}
+                                    className={`flex items-center px-2 rounded-lg ${
+                                        profile?.isSubscribed
+                                            ? "hover:bg-pink-700"
+                                            : "hover:bg-gray-300"
+                                    }`}
+                                    textColor="text-black"
+                                    bgColor={
+                                        profile?.isSubscribed
+                                            ? "bg-pink-600"
+                                            : "bg-gray-100"
+                                    }
+                                >
+                                    {profile?.isSubscribed ? (
+                                        <>
+                                            <p className="mr-2 font-semibold">
+                                                Subscribed
+                                            </p>
+                                            <FaCheckCircle />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p className="mr-2 font-semibold">
+                                                Subscribe
+                                            </p>
+                                            <FaBell />
+                                        </>
+                                    )}
+                                </Button>
+                            )
+                        ) : (
+                            <>
+                                <LoginPopup
+                                    ref={LoginPopupDialog}
+                                    message="Login to Subscribe..."
+                                    route={location.pathname}
+                                />
+                                <Button
+                                    onClick={() => {
+                                        LoginPopupDialog.current.open();
+                                    }}
+                                    className="flex items-center rounded-lg hover:bg-pink-700"
+                                    bgColor="bg-pink-600"
+                                    textColor="text-black"
+                                >
+                                    <p className="mr-2 font-semibold">
+                                        Subscribe
+                                    </p>
+                                    <FaBell />
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                </div>
+                <ul className="no-scrollbar sticky top-[66px] z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2 sm:top-[82px]">
+                    <li className="w-full">
+                        <NavLink to="">
+                            <Button
+                                className="w-full border-b-2 border-[#e14bc8]"
+                                textColor="text-[#e14bc8]"
+                                bgColor="bg-white"
+                            >
+                                Videos
+                            </Button>
+                        </NavLink>
+                    </li>
+                    <li className="w-full">
+                        <NavLink to={"playlist"}>
+                            <Button
+                                className="w-full border-b-2 border-transparent text-gray-400"
+                                textColor=""
+                                bgColor=""
+                            >
+                                Playlist
+                            </Button>
+                        </NavLink>
+                    </li>
+                    <li className="w-full">
+                        <NavLink to={"tweets"}>
+                            <Button
+                                className="w-full border-b-2 border-transparent text-gray-400"
+                                textColor=""
+                                bgColor=""
+                            >
+                                Tweets
+                            </Button>
+                        </NavLink>
+                    </li>
+                    <li className="w-full">
+                        <NavLink to={"subscribers"}>
+                            <Button
+                                className="w-full border-b-2 border-transparent text-gray-400"
+                                textColor=""
+                                bgColor=""
+                            >
+                                Subscribers
+                            </Button>
+                        </NavLink>
+                    </li>
+                    <li className="w-full">
+                        <NavLink to={"about"}>
+                            <Button
+                                className="w-full border-b-2 border-transparent text-gray-400"
+                                textColor=""
+                                bgColor=""
+                            >
+                                About
+                            </Button>
+                        </NavLink>
+                    </li>
+                </ul>
+                <Outlet />
+            </div>
+        </section>
+    ) : (
+        <span className="flex justify-center mt-20">{icons.bigLoading}</span>
+    );
+}
+
+export default Channel;

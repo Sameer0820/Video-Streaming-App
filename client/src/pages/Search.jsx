@@ -4,6 +4,7 @@ import axiosInstance from "../utils/axios.helper";
 import VideoListCard from "../components/Video/VideoListCard";
 import GuestComponent from "../components/GuestPages/GuestComponent";
 import { IoPlayOutline } from "react-icons/io5";
+import { icons } from "../assets/Icons.jsx";
 
 function Search() {
     const [videos, setVideos] = useState([]);
@@ -51,7 +52,9 @@ function Search() {
     return (
         <div>
             {loading ? (
-                <p className="flex text-xl justify-center mt-20">Loading...</p>
+                <span className="flex justify-center mt-20">
+                    {icons.bigLoading}
+                </span>
             ) : (
                 <div>
                     {error
