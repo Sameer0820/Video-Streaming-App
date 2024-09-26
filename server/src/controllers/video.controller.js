@@ -101,6 +101,80 @@ const getAllVideos = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, videos, "Videos fetched successfully"));
 });
 
+const getUserVideos = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10, sortType = "desc" } = req.query;
+    const { userId } = req.params;
+
+    if (!mongoose.isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid user Id");
+    }
+
+    const videos = await Video.aggregate([
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId),
+            },
+        },
+        {
+            $sort: {
+                createdAt: sortType === "asc" ? 1 : -1,
+            },
+        },
+        {
+            $skip: (page - 1) * limit,
+        },
+        {
+            $limit: parseInt(limit),
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            avatar: 1,
+                            username: 1,
+                            fullName: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner",
+                },
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                owner: 1,
+                videoFile: 1,
+                thumbnail: 1,
+                createdAt: 1,
+                description: 1,
+                title: 1,
+                duration: 1,
+                views: 1,
+                isPublished: 1,
+            },
+        },
+    ]);
+
+    if (!videos) {
+        throw new ApiError(404, "Error while fetching videos");
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, videos, "Videos fetched successfully"));
+});
+
 const publishAVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body;
     const videoLocalPath = req.files?.videoFile[0]?.path;
@@ -446,6 +520,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 export {
     getAllVideos,
+    getUserVideos,
     publishAVideo,
     getVideoById,
     updateVideo,

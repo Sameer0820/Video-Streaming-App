@@ -152,58 +152,64 @@ function Channel() {
                 </div>
                 <ul className="no-scrollbar sticky top-[66px] z-[2] flex flex-row gap-x-2 overflow-auto border-b-2 border-gray-400 py-2 sm:top-[82px]">
                     <li className="w-full">
-                        <NavLink to="">
-                            <Button
-                                className="w-full border-b-2 border-[#e14bc8]"
-                                textColor="text-[#e14bc8]"
-                                bgColor="bg-white"
-                            >
-                                Videos
-                            </Button>
+                        <NavLink
+                            to=""
+                            end
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
+                                    : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
+                            }
+                        >
+                            <button className="w-full">Videos</button>
                         </NavLink>
                     </li>
                     <li className="w-full">
-                        <NavLink to={"playlist"}>
-                            <Button
-                                className="w-full border-b-2 border-transparent text-gray-400"
-                                textColor=""
-                                bgColor=""
-                            >
-                                Playlist
-                            </Button>
+                        <NavLink
+                            to={"playlist"}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
+                                    : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
+                            }
+                        >
+                            <button className="w-full">Playlist</button>
                         </NavLink>
                     </li>
                     <li className="w-full">
-                        <NavLink to={"tweets"}>
-                            <Button
-                                className="w-full border-b-2 border-transparent text-gray-400"
-                                textColor=""
-                                bgColor=""
-                            >
-                                Tweets
-                            </Button>
+                        <NavLink
+                            to={"tweets"}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
+                                    : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
+                            }
+                        >
+                            <button className="w-full">Tweets</button>
                         </NavLink>
                     </li>
                     <li className="w-full">
-                        <NavLink to={"subscribers"}>
-                            <Button
-                                className="w-full border-b-2 border-transparent text-gray-400"
-                                textColor=""
-                                bgColor=""
-                            >
-                                Subscribers
-                            </Button>
+                        <NavLink
+                            to={"subscribers"}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
+                                    : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
+                            }
+                        >
+                            <button className="w-full">Subscribers</button>
                         </NavLink>
                     </li>
                     <li className="w-full">
-                        <NavLink to={"about"}>
-                            <Button
-                                className="w-full border-b-2 border-transparent text-gray-400"
-                                textColor=""
-                                bgColor=""
-                            >
-                                About
-                            </Button>
+                        <NavLink
+                            to={"about"}
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
+                                    : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
+                            }
+                        >
+                            <button className="w-full">About</button>
                         </NavLink>
                     </li>
                 </ul>

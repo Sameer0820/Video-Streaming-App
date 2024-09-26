@@ -6,6 +6,7 @@ import {
     publishAVideo,
     togglePublishStatus,
     updateVideo,
+    getUserVideos,
 } from "../controllers/video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { checkUser } from "../middlewares/openAuth.middleware.js";
@@ -14,6 +15,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
 router.route("/").get(getAllVideos);
+router.route("/c/:userId").get(getUserVideos);
 router.route("/:videoId").get(checkUser, getVideoById);
 
 router.use(verifyJWT);

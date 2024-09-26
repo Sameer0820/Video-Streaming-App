@@ -14,6 +14,7 @@ import History from "./pages/History.jsx";
 import Settings from "./pages/Settings.jsx";
 import Support from "./pages/Support.jsx";
 import Channel from "./pages/Channel.jsx";
+import ChannelVideos from "./components/Channel/ChannelVideos.jsx";
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
                 path: "/channel/:username",
                 element: <Channel />,
                 children: [
+                    {
+                        path: "/channel/:username",
+                        element: <ChannelVideos />,
+                    },
                     {
                         path: "/channel/:username/tweets",
                     },
