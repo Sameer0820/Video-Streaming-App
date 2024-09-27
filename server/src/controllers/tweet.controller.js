@@ -101,6 +101,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
 
 const getUserTweets = asyncHandler(async (req, res) => {
     const { userId } = req.params;
+    const { page = 1, limit = 30 } = req.query;
 
     if (!userId || !isValidObjectId(userId)) {
         throw new ApiError(400, "No valid user Id found");
@@ -110,6 +111,42 @@ const getUserTweets = asyncHandler(async (req, res) => {
         {
             $match: {
                 owner: new mongoose.Types.ObjectId(userId),
+            },
+        },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $skip: (page - 1) * limit,
+        },
+        {
+            $limit: parseInt(limit),
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            _id: 1,
+                            username: 1,
+                            avatar: 1,
+                            fullName: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner",
+                },
             },
         },
         {
@@ -125,20 +162,29 @@ const getUserTweets = asyncHandler(async (req, res) => {
                 likesCount: {
                     $size: "$likes",
                 },
+                isLiked: {
+                    $cond: {
+                        if: { $in: [req.user?._id, "$likes.likedBy"] },
+                        then: true,
+                        else: false,
+                    },
+                },
             },
         },
         {
             $project: {
                 _id: 1,
                 content: 1,
+                owner: 1,
                 likesCount: 1,
+                isLiked: 1,
                 createdAt: 1,
                 updatedAt: 1,
             },
         },
     ]);
 
-    if (!tweets?.length) {
+    if (!tweets) {
         throw new ApiError(401, "No tweets found for this user");
     }
 

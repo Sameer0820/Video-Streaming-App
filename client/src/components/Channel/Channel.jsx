@@ -28,7 +28,7 @@ function Channel() {
         getUserProfile(dispatch, username).then((res) => {
             setProfile(res.data);
         });
-    }, [status]);
+    }, [status, username]);
 
     const toggleSubscribe = async () => {
         try {

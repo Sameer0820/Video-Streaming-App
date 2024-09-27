@@ -34,7 +34,7 @@ function ChannelVideos() {
             <div className="flex mx-5">
                 <button
                     type="button"
-                    className={`px-3 py-1.5 mr-3 text-sm rounded-lg ${
+                    className={`px-3 py-1.5 mr-3 text-sm rounded-lg font-semibold ${
                         sortType === "desc" ? "bg-pink-500 " : "bg-slate-700"
                     }`}
                     onClick={() => setSortType("desc")}
@@ -43,7 +43,7 @@ function ChannelVideos() {
                 </button>
                 <button
                     type="button"
-                    className={`px-3 py-1.5 text-sm rounded-lg ${
+                    className={`px-3 py-1.5 text-sm rounded-lg font-semibold ${
                         sortType === "asc" ? "bg-pink-500 " : "bg-slate-700 "
                     }`}
                     onClick={() => setSortType("asc")}
