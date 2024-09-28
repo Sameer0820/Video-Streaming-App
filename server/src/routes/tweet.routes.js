@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
     createTweet,
     deleteTweet,
+    getAllTweets,
     getUserTweets,
     updateTweet,
 } from "../controllers/tweet.controller.js"
@@ -11,6 +12,7 @@ import { checkUser } from '../middlewares/openAuth.middleware.js';
 const router = Router();
 
 router.route("/user/:userId").get(checkUser, getUserTweets);
+router.route("/").get(checkUser, getAllTweets);
 
 router.use(verifyJWT);
 

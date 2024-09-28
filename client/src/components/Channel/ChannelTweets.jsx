@@ -38,7 +38,7 @@ function ChannelTweets() {
             setTweetsUpdated((prev) => !prev);
         } catch (error) {
             toast.error("Couldn't add your tweet. Try again!");
-            console.log("Error while adding comment", error);
+            console.log("Error while adding tweet", error);
         }
     };
 

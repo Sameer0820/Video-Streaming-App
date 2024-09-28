@@ -10,10 +10,14 @@ import { getUserTweets } from "../../hooks/getUserTweets";
 import { useForm } from "react-hook-form";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import {
+    deleteTweet,
+    updateTweet,
+    toggleLike,
+} from "../../store/tweetsSlice";
 
-function Tweet({ tweet }) {
+function Tweet({ tweet, page = false }) {
     const { status, userData } = useSelector((state) => state.auth);
-    const user = useSelector((state) => state.user.user);
     const [update, setUpdate] = useState(false);
     const [menu, setMenu] = useState(false);
     const dispatch = useDispatch();
@@ -27,7 +31,11 @@ function Tweet({ tweet }) {
     const handleTweetDelete = async () => {
         try {
             await axiosInstance.delete(`/tweets/${tweet._id}`).then(() => {
-                getUserTweets(dispatch, user._id);
+                if (page) {
+                    dispatch(deleteTweet(tweet._id));
+                } else {
+                    getUserTweets(dispatch, userData._id);
+                }
             });
         } catch (error) {
             toast.error("Couldn't delete tweet. Try again!");
@@ -41,8 +49,12 @@ function Tweet({ tweet }) {
                 .patch(`/tweets/${tweet._id}`, {
                     content: data.newContent,
                 })
-                .then(() => {
-                    getUserTweets(dispatch, user._id);
+                .then((res) => {
+                    if (page) {
+                        dispatch(updateTweet(res.data.data));
+                    } else {
+                        getUserTweets(dispatch, userData._id);
+                    }
                 });
             setUpdate(false);
         } catch (error) {
@@ -56,10 +68,22 @@ function Tweet({ tweet }) {
             LoginLikePopupDialog.current.open();
         } else {
             try {
-                const response = await axiosInstance
+                await axiosInstance
                     .post(`/likes/toggle/t/${tweet._id}`)
                     .then(() => {
-                        getUserTweets(dispatch, user._id);
+                        if (page) {
+                            dispatch(
+                                toggleLike({
+                                    tweetId: tweet._id,
+                                    isLiked: !tweet?.isLiked,
+                                    likesCount: tweet?.isLiked
+                                        ? tweet.likesCount - 1
+                                        : tweet.likesCount + 1,
+                                })
+                            );
+                        } else {
+                            getUserTweets(dispatch, userData._id);
+                        }
                     });
             } catch (error) {
                 toast.error("Error while toggling like button");

@@ -29,14 +29,14 @@ function Sidebar() {
             icon: <GoHome className="w-6 h-6" />,
         },
         {
-            name: "Liked videos",
-            route: "/liked-videos",
-            icon: <BiLike className="w-6 h-6" />,
-        },
-        {
             name: "Tweets",
             route: "/tweets",
             icon: <AiOutlineMessage className="w-6 h-6" />,
+        },
+        {
+            name: "Liked videos",
+            route: "/liked-videos",
+            icon: <BiLike className="w-6 h-6" />,
         },
         {
             name: "History",
