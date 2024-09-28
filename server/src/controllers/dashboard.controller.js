@@ -3,11 +3,21 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Video } from "../models/video.model.js";
 import { Subscription } from "../models/subscription.model.js";
+import { Tweet } from "../models/tweet.model.js";
+import mongoose from "mongoose";
 
 const getChannelStats = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    if (!mongoose.isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid user Id");
+    }
+
     const videoStats = await Video.aggregate([
         {
-            $match: { owner: req.user?._id },
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId),
+            },
         },
         {
             $lookup: {
@@ -45,7 +55,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     const subscriberStats = await Subscription.aggregate([
         {
             $match: {
-                channel: req.user?._id,
+                channel: userId,
             },
         },
         {
@@ -58,7 +68,23 @@ const getChannelStats = asyncHandler(async (req, res) => {
         },
     ]);
 
-    if (!(videoStats && subscriberStats)) {
+    const tweetStats = await Tweet.aggregate([
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId),
+            },
+        },
+        {
+            $group: {
+                _id: null,
+                tweetCnt: {
+                    $sum: 1,
+                },
+            },
+        },
+    ]);
+
+    if (!(videoStats && subscriberStats && tweetStats)) {
         throw new ApiError(500, "Failed to fetch channel data");
     }
 
@@ -67,6 +93,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
         totalLikes: videoStats[0]?.totalLikesCnt || 0,
         totalVideos: videoStats[0]?.totalVideos || 0,
         totalViews: videoStats[0]?.totalViewsCnt || 0,
+        totalTweets: tweetStats[0]?.tweetCnt || 0,
     };
 
     return res
