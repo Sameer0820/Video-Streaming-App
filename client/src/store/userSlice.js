@@ -7,6 +7,7 @@ const initialState = {
     userTweets: null,
     userLikedVideos: null,
     userHistory: null,
+    userSubscribed: null,
 };
 
 const userSlice = createSlice({
@@ -31,6 +32,20 @@ const userSlice = createSlice({
         addUserHistory: (state, action) => {
             state.userHistory = action.payload;
         },
+        addUserSubscribed: (state, action) => {
+            state.userSubscribed = action.payload;
+        },
+        toggleUserSubscribe: (state, action) => {
+            state.userSubscribed.channels = state.userSubscribed.channels.map((profile) =>
+                profile._id === action.payload.profileId
+                    ? {
+                          ...profile,
+                          isSubscribed: action.payload.isSubscribed,
+                          subscribersCount: action.payload.subscribersCount,
+                      }
+                    : profile
+            );
+        },
     },
 });
 
@@ -41,6 +56,8 @@ export const {
     addUserTweets,
     addUserLikedVideos,
     addUserHistory,
+    addUserSubscribed,
+    toggleUserSubscribe,
 } = userSlice.actions;
 
 export default userSlice.reducer;

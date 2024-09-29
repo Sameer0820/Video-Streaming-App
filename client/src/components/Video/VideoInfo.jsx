@@ -15,6 +15,7 @@ import { setVideo } from "../../store/videoSlice";
 import LoginPopup from "../Auth/LoginPopup";
 import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
+import formatSubscription from "../../utils/fromatSubscription";
 
 function VideoInfo({ video }) {
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
@@ -138,7 +139,9 @@ function VideoInfo({ video }) {
                                 {video?.owner?.fullName}
                             </p>
                             <p className="text-gray-300  text-[0.8rem]">
-                                {video?.owner?.subscriberCount} subscribers
+                                {formatSubscription(
+                                    video?.owner?.subscriberCount
+                                )}
                             </p>
                         </div>
                     </div>

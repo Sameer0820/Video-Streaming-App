@@ -190,14 +190,14 @@ function Channel() {
                     </li>
                     <li className="w-full">
                         <NavLink
-                            to={"subscribers"}
+                            to={"subscribed"}
                             className={({ isActive }) =>
                                 isActive
                                     ? "w-full border-b-2 border-[#e14bc8] text-[#e14bc8] bg-white px-2 py-1"
                                     : "w-full border-b-2 border-transparent text-gray-400 px-2 py-1"
                             }
                         >
-                            <button className="w-full">Subscribers</button>
+                            <button className="w-full">Subscribed</button>
                         </NavLink>
                     </li>
                     <li className="w-full">

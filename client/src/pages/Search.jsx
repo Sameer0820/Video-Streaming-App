@@ -26,8 +26,8 @@ function Search() {
                         title="No videos found"
                         subtitle="There are no videos here for your search result. Please try to search something else."
                         icon={
-                            <span className="w-full h-full flex items-center p-4 pb-5">
-                                <IoPlayOutline className="w-32 h-32" />
+                            <span className="w-full h-full flex items-center p-2">
+                                <IoPlayOutline className="w-28 h-28" />
                             </span>
                         }
                         guest={false}
