@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
     addVideoToPlaylist,
     createPlaylist,
@@ -7,23 +7,25 @@ import {
     getUserPlaylists,
     removeVideoFromPlaylist,
     updatePlaylist,
-} from "../controllers/playlist.controller.js"
-import {verifyJWT} from "../middlewares/auth.middleware.js"
+} from "../controllers/playlist.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { checkUser } from "../middlewares/openAuth.middleware.js";
 
 const router = Router();
+
+router.route("/:playlistId").get(checkUser, getPlaylistById);
+router.route("/user/:userId").get(checkUser, getUserPlaylists);
+
 router.use(verifyJWT);
 
-router.route("/").post(createPlaylist)
+router.route("/").post(createPlaylist);
 
 router
     .route("/:playlistId")
-    .get(getPlaylistById)
     .patch(updatePlaylist)
     .delete(deletePlaylist);
 
 router.route("/add/:videoId/:playlistId").patch(addVideoToPlaylist);
 router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
 
-router.route("/user/:userId").get(getUserPlaylists);
-
-export default router
+export default router;

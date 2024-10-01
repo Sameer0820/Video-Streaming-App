@@ -1,6 +1,6 @@
 function formatDate(timestamp) {
     const date = new Date(timestamp);
-    const days = date.getDate() + 1;
+    const days = date.getDate();
     const months = date.getMonth() + 1;
 
     const day = days < 10 ? "0" + days : days;

@@ -1,7 +1,7 @@
 import axiosInstance from "../utils/axios.helper";
 import { addUserPlaylist } from "../store/userSlice";
 
-export const userPlaylist = async (dispatch, userId) => {
+export const getUserPlaylist = async (dispatch, userId) => {
     try {
         const response = await axiosInstance.get(`/playlist/user/${userId}`);
         if (response?.data?.data) {

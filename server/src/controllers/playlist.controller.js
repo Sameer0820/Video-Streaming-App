@@ -40,10 +40,65 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
                 owner: new mongoose.Types.ObjectId(userId),
             },
         },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullName: 1,
+                            username: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "videos",
+                foreignField: "_id",
+                as: "videos",
+                pipeline: [
+                    {
+                        $project: {
+                            thumbnail: 1,
+                            views: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: "$owner",
+        },
+        {
+            $project: {
+                name: 1,
+                description: 1,
+                owner: 1,
+                thumbnail: 1,
+                createdAt: 1,
+                updatedAt: 1,
+                thumbnail: {
+                    $first: "$videos.thumbnail",
+                },
+                videosCount: {
+                    $size: "$videos",
+                },
+                totalViews: {
+                    $sum: "$videos.views",
+                },
+            },
+        },
     ]);
 
-    if (!playlists.length) {
-        throw new ApiError(404, "No playlists found for this user");
+    if (!playlists) {
+        throw new ApiError(404, "Error while fetching playlist");
     }
 
     return res
@@ -60,7 +115,93 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid Playlist Id");
     }
 
-    const playlist = await Playlist.findById(playlistId);
+    const playlist = await Playlist.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(playlistId),
+            },
+        },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "videos",
+                foreignField: "_id",
+                as: "videos",
+                pipeline: [
+                    {
+                        $match: { isPublished: true },
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        username: 1,
+                                        fullName: 1,
+                                        avatar: 1,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $addFields: {
+                            owner: {
+                                $first: "$owner",
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            username: 1,
+                            fullName: 1,
+                            avatar: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner",
+                },
+            },
+        },
+        {
+            $project: {
+                name: 1,
+                description: 1,
+                videos: 1,
+                owner: 1,
+                thumbnail: {
+                    $first: "$videos.thumbnail",
+                },
+                videosCount: {
+                    $size: "$videos",
+                },
+                totalViews: {
+                    $sum: "videos.views",
+                },
+                createdAt: 1,
+                updatedAt: 1,
+            },
+        },
+    ]);
 
     if (!playlist) {
         throw new ApiError(500, "Error while fetching playlist");
