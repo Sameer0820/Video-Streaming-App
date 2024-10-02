@@ -35,6 +35,8 @@ function ChannelPlaylist() {
         dialog.current.open();
     }
 
+    let counter = 0;
+
     return (
         <>
             <PlaylistForm ref={dialog} route={location} />
@@ -52,11 +54,13 @@ function ChannelPlaylist() {
                         </div>
                     )}
                     <ul className="flex flex-wrap justify-start">
-                        {playlists.map(
-                            (playlist) =>
-                                (playlist.videosCount > 0 ||
-                                    (status &&
-                                        userData?.username === username)) && (
+                        {playlists.map((playlist) => {
+                            if (
+                                playlist.videosCount > 0 ||
+                                (status && userData?.username === username)
+                            ) {
+                                counter++;
+                                return (
                                     <li
                                         key={playlist._id}
                                         className="hover:bg-zinc-900 2xl:w-[18vw] md:w-[25vw] w-[90vw] rounded-md my-4 text-white mx-2 p-1"
@@ -110,16 +114,18 @@ function ChannelPlaylist() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex px-3 pt-1 min-h-8 bg-zinc-800 rounded-b-md">
-                                                <p className="flex text-sm text-gray-200 max-h-10 overflow-hidden">
+                                            <div className="px-3 py-2 bg-zinc-800 rounded-b-md">
+                                                <p className="text-sm text-gray-200 overflow-hidden line-clamp-1">
                                                     {playlist.description}
                                                 </p>
                                             </div>
                                         </Link>
                                     </li>
-                                )
-                        )}
+                                );
+                            }
+                        })}
                     </ul>
+                    {counter === 0 && <ChannelEmptyPlaylist />}
                 </>
             ) : (
                 <ChannelEmptyPlaylist />

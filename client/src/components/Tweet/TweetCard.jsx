@@ -191,7 +191,7 @@ function Tweet({ tweet, page = false }) {
                 </button>
             </div>
             {tweet?.owner?._id === userData?._id && (
-                <div className="relative">
+                <div ref={ref} className="relative">
                     <button
                         onClick={() => setMenu((prev) => !prev)}
                         className="p-2 hover:bg-slate-800 hover:rounded-full"
@@ -200,7 +200,6 @@ function Tweet({ tweet, page = false }) {
                     </button>
                     {menu && (
                         <div
-                            ref={ref}
                             className="absolute right-0 w-24 bg-black rounded-lg shadow-lg text-sm"
                         >
                             <button

@@ -31,13 +31,15 @@ function ChannelEmptyPlaylist({ videos = false }) {
                             : "Your channel has yet to create a playlist. Click to create a new playlist"}
                     </p>
                     <PlaylistForm ref={dialog} />
-                    <button
-                        onClick={playlistPopup}
-                        className="mt-4 inline-flex items-center gap-x-2 bg-pink-500 hover:bg-pink-500/90 border border-transparent rounded-lg hover:border-white px-3 py-1.5 font-semibold text-black"
-                    >
-                        <IoAdd className="w-5 h-5" />
-                        New Playlist
-                    </button>
+                    {!videos && (
+                        <button
+                            onClick={playlistPopup}
+                            className="mt-4 inline-flex items-center gap-x-2 bg-pink-500 hover:bg-pink-500/90 border border-transparent rounded-lg hover:border-white px-3 py-1.5 font-semibold text-black"
+                        >
+                            <IoAdd className="w-5 h-5" />
+                            New Playlist
+                        </button>
+                    )}
                 </div>
             </div>
         );

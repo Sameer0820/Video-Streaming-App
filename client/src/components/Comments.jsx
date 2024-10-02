@@ -282,7 +282,12 @@ function Comments({ video }) {
                                         </button>
                                     </div>
                                     {comment?.owner?._id === userData?._id && (
-                                        <div className="relative">
+                                        <div
+                                            ref={(el) =>
+                                                (menuRefs.current[index] = el)
+                                            }
+                                            className="relative"
+                                        >
                                             <button
                                                 onClick={() =>
                                                     toggleMenu(comment._id)
@@ -293,14 +298,7 @@ function Comments({ video }) {
                                             </button>
                                             {activeCommentId ===
                                                 comment._id && (
-                                                <div
-                                                    ref={(el) =>
-                                                        (menuRefs.current[
-                                                            index
-                                                        ] = el)
-                                                    }
-                                                    className="absolute left-0 w-24 bg-black rounded-lg shadow-lg text-sm"
-                                                >
+                                                <div className="absolute left-0 w-24 bg-black rounded-lg shadow-lg text-sm">
                                                     <button
                                                         onClick={() =>
                                                             handleUpdate(

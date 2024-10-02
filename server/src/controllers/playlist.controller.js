@@ -195,7 +195,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
                     $size: "$videos",
                 },
                 totalViews: {
-                    $sum: "videos.views",
+                    $sum: "$videos.views",
                 },
                 createdAt: 1,
                 updatedAt: 1,
@@ -209,7 +209,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, playlist, "Playlist fetched successfully"));
+        .json(new ApiResponse(200, playlist[0], "Playlist fetched successfully"));
 });
 
 const addVideoToPlaylist = asyncHandler(async (req, res) => {

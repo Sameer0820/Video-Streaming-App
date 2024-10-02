@@ -9,14 +9,14 @@ import axiosInstance from "../../utils/axios.helper.js";
 import { toast } from "react-toastify";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { updateUserPlaylist } from "../../store/userSlice.js";
+import { updatePlaylist } from "../../store/playlistSlice.js";
 import { getUserPlaylist } from "../../hooks/getUserPlaylist.js";
 
 function PlaylistForm({ playlist, route }, ref) {
     const dialog = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userId = useSelector((state) => state.user.user._id);
+    const userId = useSelector((state) => state?.user?.user?._id);
 
     const [showPopup, setShowPopup] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ function PlaylistForm({ playlist, route }, ref) {
         if (route) navigate(route);
     };
 
-    const updatePlaylist = async (data) => {
+    const handleUpdatePlaylist = async (data) => {
         setLoading(true);
         try {
             if (playlist) {
@@ -66,8 +66,7 @@ function PlaylistForm({ playlist, route }, ref) {
                 );
                 if (response?.data?.success) {
                     dispatch(
-                        updateUserPlaylist({
-                            playlistId: playlist._id,
+                        updatePlaylist({
                             name: response.data.data.name,
                             description: response.data.data.description,
                         })
@@ -109,7 +108,7 @@ function PlaylistForm({ playlist, route }, ref) {
                         <div className="relative flex min-h-[calc(100vh-66px)] sm:min-h-[calc(100vh-82px)]">
                             <div className="fixed inset-0 top-[calc(66px)] z-10 flex flex-col px-4 pb-[86px] pt-4 sm:top-[calc(82px)] sm:px-14 sm:py-8">
                                 <form
-                                    onSubmit={handleSubmit(updatePlaylist)}
+                                    onSubmit={handleSubmit(handleUpdatePlaylist)}
                                     className="mx-auto w-full max-w-lg overflow-auto rounded-lg border border-gray-700 text-white bg-zinc-950 p-4"
                                 >
                                     <div className="mb-4 flex items-start justify-between">
