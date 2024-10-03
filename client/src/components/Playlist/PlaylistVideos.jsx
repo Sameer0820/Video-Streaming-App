@@ -222,7 +222,7 @@ function PlaylistVideos() {
                         </div>
                     )}
                     {playlist?.videos?.map((video) => (
-                        <div className="flex" key={video._id}>
+                        <div className="flex hover:bg-zinc-900 rounded-lg" key={video._id}>
                             <VideoListCard
                                 video={video}
                                 imgWidth="w-[300px]"
@@ -230,8 +230,8 @@ function PlaylistVideos() {
                                 titleWidth="w-[100%]"
                                 titleSize="text-[1.1rem]"
                                 titleFont=""
-                                paddingY="py-0"
-                                marginLeft="ml-4"
+                                paddingY="py-1"
+                                marginLeft="ml-2"
                                 marginLeft2="ml-4"
                                 avatarHeight="h-10"
                                 avatarWidth="w-10"
@@ -243,7 +243,7 @@ function PlaylistVideos() {
                                     playlist.owner.username && (
                                     <button
                                         title="remove video"
-                                        className="flex"
+                                        className="flex p-1"
                                     >
                                         <MdDelete
                                             onClick={() =>

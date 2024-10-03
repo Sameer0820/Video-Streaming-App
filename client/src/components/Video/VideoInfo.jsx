@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import getTimeDistanceToNow from "../../utils/getTimeDistance";
 import { useLocation, Link } from "react-router-dom";
 import { BiLike, BiSolidLike } from "react-icons/bi";
@@ -16,13 +16,17 @@ import LoginPopup from "../Auth/LoginPopup";
 import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
 import formatSubscription from "../../utils/fromatSubscription";
+import { setPlaylists, updatePlaylist } from "../../store/playlistsSlice";
 
 function VideoInfo({ video }) {
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
     const authStatus = useSelector((state) => state.auth.status);
     const [showFullDescription, setShowFullDescription] = useState(false);
+    const [menu, setMenu] = useState(false);
     const LoginLikePopupDialog = useRef();
     const LoginSubsPopupDialog = useRef();
+    const LoginSavePopupDialog = useRef();
+    const ref = useRef(null);
     const location = useLocation();
     const dispatch = useDispatch();
 
@@ -89,6 +93,82 @@ function VideoInfo({ video }) {
         }
     };
 
+    const handleSavePlaylist = async () => {
+        try {
+            const response = await axiosInstance.get(
+                `/playlist/user/p/${video._id}`
+            );
+            if (response.data.success) {
+                dispatch(setPlaylists(response.data.data));
+            }
+        } catch (error) {
+            toast.error("Error while fetching your playlists");
+            console.log("Error while fetching playlists", error);
+        }
+    };
+
+    useEffect(() => {
+        if (authStatus) {
+            handleSavePlaylist();
+        }
+    }, [authStatus]);
+
+    const handlePlaylistVideo = async (playlistId, status) => {
+        if (!playlistId && !status) return;
+        if (status) {
+            try {
+                const response = await axiosInstance.patch(
+                    `/playlist/add/${video._id}/${playlistId}`
+                );
+                if (response?.data?.success) {
+                    toast.success(response.data.message);
+                    dispatch(
+                        updatePlaylist({
+                            playlistId: playlistId,
+                            isVideoPresent: true,
+                        })
+                    );
+                }
+            } catch (error) {
+                toast.error("Error while adding video to playlist");
+                console.log(error);
+            }
+        } else {
+            try {
+                const response = await axiosInstance.patch(
+                    `/playlist/remove/${video._id}/${playlistId}`
+                );
+                if (response?.data?.success) {
+                    toast.success(response.data.message);
+                    dispatch(
+                        updatePlaylist({
+                            playlistId: playlistId,
+                            isVideoPresent: false,
+                        })
+                    );
+                }
+            } catch (error) {
+                toast.error("Error while removing video to playlist");
+                console.log(error);
+            }
+        }
+    };
+
+    const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            setMenu(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const playlists = useSelector((state) => state.playlists.playlists);
+
     return (
         <div className="border rounded-xl px-4 py-2 ml-1 mt-2 bg-opacity-5">
             <div className="flex justify-between">
@@ -102,7 +182,7 @@ function VideoInfo({ video }) {
                     <>
                         <LoginPopup
                             ref={LoginLikePopupDialog}
-                            message="Login to Like Video..."
+                            message="Login to Like this Video..."
                             route={location.pathname}
                         />
                         <button
@@ -117,11 +197,74 @@ function VideoInfo({ video }) {
                             )}
                         </button>
                     </>
-
-                    <Button className="border rounded-lg border-gray-400 ml-2 flex items-center hover:bg-gray-900">
-                        <FaSave className="mr-1" />
-                        Save
-                    </Button>
+                    <>
+                        <LoginPopup
+                            ref={LoginSavePopupDialog}
+                            message="Login to add this video in playlist..."
+                            route={location.pathname}
+                        />
+                        <div ref={ref} className="relative">
+                            <Button
+                                onClick={() => {
+                                    if (authStatus) {
+                                        setMenu((prev) => !prev);
+                                    } else {
+                                        LoginSavePopupDialog.current.open();
+                                    }
+                                }}
+                                className="border rounded-lg border-gray-400 ml-2 flex items-center hover:bg-gray-900"
+                            >
+                                <FaSave className="mr-1" />
+                                Save
+                            </Button>
+                            {menu && (
+                                <div className="absolute right-0 top-full z-2 w-64 overflow-hidden rounded-lg bg-zinc-900 p-4 hover:block peer-focus:block">
+                                    <h3 className="mb-4 text-center text-lg font-semibold">
+                                        Save to playlist
+                                    </h3>
+                                    <ul className="mb-4">
+                                        {playlists?.length > 0 ? (
+                                            playlists?.map((item) => (
+                                                <li
+                                                    key={item._id}
+                                                    className="mb-2 last:mb-0 text-sm"
+                                                >
+                                                    <label
+                                                        htmlFor={
+                                                            "collection" +
+                                                            item._id
+                                                        }
+                                                        className="group/label inline-flex cursor-pointer items-center gap-x-3"
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            id={
+                                                                "collection" +
+                                                                item._id
+                                                            }
+                                                            defaultChecked={
+                                                                item.isVideoPresent
+                                                            }
+                                                            onChange={(e) =>
+                                                                handlePlaylistVideo(
+                                                                    item._id,
+                                                                    e.target
+                                                                        .checked
+                                                                )
+                                                            }
+                                                        />
+                                                        {item.name}
+                                                    </label>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <div className="text-center">No playlist created.</div>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    </>
                 </div>
             </div>
             <div className="flex justify-between mt-2">

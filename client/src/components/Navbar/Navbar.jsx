@@ -31,11 +31,13 @@ function Navbar() {
             )}
 
             {authStatus && userData && (
-                <img
-                    src={userData.avatar}
-                    alt={userData.username}
-                    className="object-cover h-10 w-10 shrink-0 rounded-full"
-                />
+                <Link to={`/channel/${userData.username}`}>
+                    <img
+                        src={userData.avatar}
+                        alt={userData.username}
+                        className="object-cover h-10 w-10 shrink-0 rounded-full"
+                    />
+                </Link>
             )}
         </nav>
     );

@@ -7,6 +7,7 @@ import {
     getUserPlaylists,
     removeVideoFromPlaylist,
     updatePlaylist,
+    getVideoPlaylist,
 } from "../controllers/playlist.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { checkUser } from "../middlewares/openAuth.middleware.js";
@@ -20,12 +21,10 @@ router.use(verifyJWT);
 
 router.route("/").post(createPlaylist);
 
-router
-    .route("/:playlistId")
-    .patch(updatePlaylist)
-    .delete(deletePlaylist);
+router.route("/:playlistId").patch(updatePlaylist).delete(deletePlaylist);
 
 router.route("/add/:videoId/:playlistId").patch(addVideoToPlaylist);
 router.route("/remove/:videoId/:playlistId").patch(removeVideoFromPlaylist);
+router.route("/user/p/:videoId").get(getVideoPlaylist);
 
 export default router;
