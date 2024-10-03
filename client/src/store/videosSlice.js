@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     videos: null,
+    subscribedVideos: null,
 };
 
 const videosSlice = createSlice({
@@ -11,8 +12,11 @@ const videosSlice = createSlice({
         addVideos: (state, action) => {
             state.videos = action.payload;
         },
+        addSubscribedVideos: (state, action) => {
+            state.subscribedVideos = action.payload;
+        },
     },
 });
 
-export const { addVideos } = videosSlice.actions;
+export const { addVideos, addSubscribedVideos } = videosSlice.actions;
 export default videosSlice.reducer;

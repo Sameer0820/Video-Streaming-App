@@ -21,6 +21,7 @@ import ChannelSubscribed from "./components/Channel/ChannelSubscribed.jsx";
 import ChannelPlaylist from "./components/Channel/ChannelPlaylist.jsx";
 import PlaylistVideos from "./components/Playlist/PlaylistVideos.jsx";
 import Tweets from "./pages/Tweets.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
 
 const router = createBrowserRouter([
     {
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
             {
                 path: "/playlist/:playlistId",
                 element: <PlaylistVideos />,
+            },
+            {
+                path: "/subscriptions",
+                element: <Subscriptions />,
             },
         ],
     },

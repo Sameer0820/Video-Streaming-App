@@ -1,19 +1,21 @@
 import React, { useEffect } from "react";
-import VideoCard from "./VideoCard";
-import { addVideos } from "../../store/videosSlice.js";
+import VideoCard from "../components/Video/VideoCard";
 import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../utils/axios.helper";
+import { addSubscribedVideos } from "../store/videosSlice";
 import { FaVideo } from "react-icons/fa";
-import axiosInstance from "../../utils/axios.helper.js";
+import GuestSubscriptions from "../components/GuestPages/GuestSubscriptions";
 
-function VideoContainer() {
+function Subscriptions() {
     const dispatch = useDispatch();
-    const { videos } = useSelector((state) => state.videos);
+    const videos = useSelector((state) => state.videos.subscribedVideos);
+    const authStatus = useSelector((state) => state.auth.status);
 
     const getData = async () => {
         try {
-            const response = await axiosInstance.get("/videos");
-            if (response?.data?.data?.length > 0) {
-                dispatch(addVideos(response?.data?.data));
+            const response = await axiosInstance.get("/videos/s/subscription");
+            if (response?.data?.success) {
+                dispatch(addSubscribedVideos(response?.data?.data));
             }
         } catch (error) {
             console.log("Error fetching videos", error);
@@ -21,8 +23,14 @@ function VideoContainer() {
     };
 
     useEffect(() => {
-        getData();
+        if (authStatus) {
+            getData();
+        }
     }, []);
+
+    if (!authStatus) {
+        return <GuestSubscriptions />;
+    }
 
     if (!videos || videos?.length === 0) {
         return (
@@ -46,4 +54,4 @@ function VideoContainer() {
     );
 }
 
-export default VideoContainer;
+export default Subscriptions;

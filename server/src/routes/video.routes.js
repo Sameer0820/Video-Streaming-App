@@ -7,6 +7,7 @@ import {
     togglePublishStatus,
     updateVideo,
     getUserVideos,
+    getSubscribedVideos,
 } from "../controllers/video.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { checkUser } from "../middlewares/openAuth.middleware.js";
@@ -40,5 +41,6 @@ router
     .patch(upload.single("thumbnail"), updateVideo);
 
 router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
+router.route("/s/subscription").get(getSubscribedVideos);
 
 export default router;

@@ -44,8 +44,8 @@ function Sidebar() {
             icon: <GoHistory className="w-6 h-6" />,
         },
         {
-            name: "Collection",
-            route: "/collection",
+            name: "Subscriptions",
+            route: "/subscriptions",
             icon: <BsCollectionPlay className="w-6 h-6" />,
         },
         {
