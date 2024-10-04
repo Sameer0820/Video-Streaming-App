@@ -17,6 +17,7 @@ import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
 import formatSubscription from "../../utils/fromatSubscription";
 import { setPlaylists, updatePlaylist } from "../../store/playlistsSlice";
+import PlaylistForm from "../Playlist/PlaylistForm";
 
 function VideoInfo({ video }) {
     const timeDistance = getTimeDistanceToNow(video?.createdAt);
@@ -27,8 +28,10 @@ function VideoInfo({ video }) {
     const LoginSubsPopupDialog = useRef();
     const LoginSavePopupDialog = useRef();
     const ref = useRef(null);
+    const dialog = useRef();
     const location = useLocation();
     const dispatch = useDispatch();
+    const userPlaylist = useSelector((state) => state.user.userPlaylist);
 
     const toggleDescription = () => {
         setShowFullDescription(!showFullDescription);
@@ -111,7 +114,7 @@ function VideoInfo({ video }) {
         if (authStatus) {
             handleSavePlaylist();
         }
-    }, [authStatus]);
+    }, [authStatus, userPlaylist]);
 
     const handlePlaylistVideo = async (playlistId, status) => {
         if (!playlistId && !status) return;
@@ -153,6 +156,11 @@ function VideoInfo({ video }) {
             }
         }
     };
+
+    function popupPlaylistForm() {
+        dialog.current?.open();
+        setMenu(false);
+    }
 
     const handleClickOutside = (event) => {
         if (ref.current && !ref.current.contains(event.target)) {
@@ -198,6 +206,7 @@ function VideoInfo({ video }) {
                         </button>
                     </>
                     <>
+                        <PlaylistForm ref={dialog} route={location} />
                         <LoginPopup
                             ref={LoginSavePopupDialog}
                             message="Login to add this video in playlist..."
@@ -258,9 +267,19 @@ function VideoInfo({ video }) {
                                                 </li>
                                             ))
                                         ) : (
-                                            <div className="text-center">No playlist created.</div>
+                                            <div className="text-center">
+                                                No playlist created.
+                                            </div>
                                         )}
                                     </ul>
+                                    <div className="flex items-center justify-center">
+                                        <button
+                                            onClick={popupPlaylistForm}
+                                            className="items-center gap-x-2 bg-pink-500 hover:bg-pink-500/90 border border-transparent rounded-lg hover:border-white px-2 py-1 font-semibold text-black"
+                                        >
+                                            Create new Playlist
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -18,7 +18,7 @@ function ChannelPlaylist() {
     const location = useLocation();
 
     useEffect(() => {
-        getUserPlaylist(dispatch, userId).then(() => setLoading(false));
+        getUserPlaylist(dispatch, userId || userData._id).then(() => setLoading(false));
     }, [username]);
 
     const playlists = useSelector((state) => state.user.userPlaylist);

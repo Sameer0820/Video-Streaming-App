@@ -3,8 +3,9 @@ import VideoCard from "../components/Video/VideoCard";
 import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "../utils/axios.helper";
 import { addSubscribedVideos } from "../store/videosSlice";
-import { FaVideo } from "react-icons/fa";
+import { FaRegPlayCircle } from "react-icons/fa";
 import GuestSubscriptions from "../components/GuestPages/GuestSubscriptions";
+import GuestComponent from "../components/GuestPages/GuestComponent";
 
 function Subscriptions() {
     const dispatch = useDispatch();
@@ -34,12 +35,16 @@ function Subscriptions() {
 
     if (!videos || videos?.length === 0) {
         return (
-            <div className="flex justify-center mt-[30vh]">
-                <div className="flex flex-col items-center">
-                    <FaVideo className="w-20 h-20" />
-                    <h1>No Videos Available</h1>
-                </div>
-            </div>
+            <GuestComponent
+                icon={
+                    <span className="w-full h-full flex items-center p-4">
+                        <FaRegPlayCircle className="w-32 h-32" />
+                    </span>
+                }
+                title="No Videos Available"
+                subtitle="Either you don't have any subscribed channels or your subscribed channels have no video."
+                guest={false}
+            />
         );
     }
 
