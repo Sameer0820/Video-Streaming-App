@@ -10,6 +10,7 @@ import { BsCollectionPlay } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { GoQuestion } from "react-icons/go";
 import { GrLogout } from "react-icons/gr";
+import { FaRegUserCircle } from "react-icons/fa";
 import axiosInstance from "../utils/axios.helper";
 import { unSetUser } from "../store/authSlice";
 import { toast } from "react-toastify";
@@ -49,7 +50,7 @@ function Sidebar() {
             icon: <BsCollectionPlay className="w-6 h-6" />,
         },
         {
-            name: "My Content",
+            name: "My Channel",
             route: `/channel/${userData?.username}`,
             icon: <GoDeviceCameraVideo className="w-6 h-6" />,
         },
@@ -99,6 +100,25 @@ function Sidebar() {
                         </li>
                     </NavLink>
                 ))}
+                {authStatus && (
+                    <NavLink
+                        className={({ isActive }) =>
+                            `${isActive ? "text-pink-700" : "text-gray-200"}`
+                        }
+                        to="/admin/dashboard"
+                    >
+                        <li
+                            className={`py-2 hover:bg-gray-800 transition-all duration-100 cursor-pointer flex items-center rounded-lg ${
+                                isWatchPage ? "justify-center " : " px-5"
+                            }`}
+                        >
+                            <span className={`${isWatchPage ? "" : "mr-2"}`}>
+                                <FaRegUserCircle className="w-6 h-6" />
+                            </span>
+                            {!isWatchPage && "Dashboard"}
+                        </li>
+                    </NavLink>
+                )}
             </ul>
             <ul className="px-2 py-2">
                 {authStatus && (

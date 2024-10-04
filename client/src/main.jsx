@@ -22,6 +22,7 @@ import ChannelPlaylist from "./components/Channel/ChannelPlaylist.jsx";
 import PlaylistVideos from "./components/Playlist/PlaylistVideos.jsx";
 import Tweets from "./pages/Tweets.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
     {
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
             {
                 path: "/subscriptions",
                 element: <Subscriptions />,
+            },
+            {
+                path: "/admin/dashboard",
+                element: <Dashboard />,
             },
         ],
     },

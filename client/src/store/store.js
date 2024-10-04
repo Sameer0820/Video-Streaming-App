@@ -6,6 +6,7 @@ import videoSlice from "./videoSlice";
 import tweetsSlice from "./tweetsSlice";
 import playlistSlice from "./playlistSlice";
 import playlistsSlice from "./playlistsSlice";
+import dashboardSlice from "./dashboardSlice"
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         tweets: tweetsSlice,
         playlist: playlistSlice,
         playlists: playlistsSlice,
+        dashboard: dashboardSlice,
     },
 });
 

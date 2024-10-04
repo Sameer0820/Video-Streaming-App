@@ -55,7 +55,7 @@ const getChannelStats = asyncHandler(async (req, res) => {
     const subscriberStats = await Subscription.aggregate([
         {
             $match: {
-                channel: userId,
+                channel: new mongoose.Types.ObjectId(userId),
             },
         },
         {
@@ -126,15 +126,30 @@ const getChannelVideos = asyncHandler(async (req, res) => {
             },
         },
         {
+            $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "video",
+                as: "comments",
+            },
+        },
+        {
+            $addFields: {
+                commentsCount: {
+                    $size: "$comments",
+                },
+            },
+        },
+        {
             $project: {
                 _id: 1,
                 videoFile: 1,
+                isPublished: 1,
                 thumbnail: 1,
                 likesCount: 1,
+                commentsCount: 1,
                 createdAt: 1,
                 title: 1,
-                description: 1,
-                duration: 1,
                 views: 1,
             },
         },

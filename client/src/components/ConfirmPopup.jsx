@@ -79,12 +79,12 @@ function ConfirmPopup(
                                             {title}
                                         </h6>
                                         {subtitle && (
-                                            <span className=" text-lg text-gray-300">
+                                            <span className=" text-xl text-gray-300">
                                                 {subtitle}
                                             </span>
                                         )}
                                         {message && (
-                                            <span className=" text-lg text-gray-300 mt-1">
+                                            <span className="text-gray-300 mt-1">
                                                 {message}
                                             </span>
                                         )}
