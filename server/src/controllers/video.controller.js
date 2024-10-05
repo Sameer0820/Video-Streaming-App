@@ -272,9 +272,9 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const videoLocalPath = req.files?.videoFile[0]?.path;
     const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
 
-    if ([title, description].some((field) => field?.trim() === "")) {
+    if (!title || title.trim() === "") {
         unlinkPath(videoLocalPath, thumbnailLocalPath);
-        throw new ApiError(400, "All fields are required");
+        throw new ApiError(400, "Title is required");
     }
 
     if (!videoLocalPath) {
@@ -299,7 +299,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
         thumbnail: thumbnail?.url,
         title,
         duration: videoFile?.duration,
-        description,
+        description: description || "",
         owner: req.user?._id,
     });
 
@@ -499,7 +499,7 @@ const updateVideo = asyncHandler(async (req, res) => {
             $set: {
                 title: title || video?.title,
                 description: description || video?.description,
-                thumbnail: thumbnail.url || video?.thumbnail,
+                thumbnail: thumbnail?.url || video?.thumbnail,
             },
         },
         {

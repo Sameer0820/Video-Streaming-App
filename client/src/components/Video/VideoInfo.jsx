@@ -227,7 +227,7 @@ function VideoInfo({ video }) {
                                 Save
                             </Button>
                             {menu && (
-                                <div className="absolute right-0 top-full z-2 w-64 overflow-hidden rounded-lg bg-zinc-900 p-4 hover:block peer-focus:block">
+                                <div className="absolute right-0 top-full z-10 w-64 overflow-hidden rounded-lg bg-zinc-900 p-4 hover:block peer-focus:block">
                                     <h3 className="mb-4 text-center text-lg font-semibold">
                                         Save to playlist
                                     </h3>

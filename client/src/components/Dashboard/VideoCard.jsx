@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import formatDate from "../../utils/formatDate";
 import { Link } from "react-router-dom";
 import ConfirmPopup from "../ConfirmPopup";
@@ -7,11 +7,15 @@ import axiosInstance from "../../utils/axios.helper";
 import { toast } from "react-toastify";
 import { updateVideoPublishStatus } from "../../store/dashboardSlice";
 import { deleteVideo } from "../../store/dashboardSlice";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
+import VideoForm from "./VideoForm";
+import { getChannelStats } from "../../hooks/getChannelStats.js";
 
 function VideoCard({ video }) {
     const dispatch = useDispatch();
     const confirmDialog = useRef();
+    const editDialog = useRef();
+    const user = useSelector((state) => state.auth.userData);
 
     const [publishStatus, setPublishStatus] = useState(video?.isPublished);
 
@@ -45,6 +49,7 @@ function VideoCard({ video }) {
                 if (response.data.success) {
                     toast.success(response.data.message);
                     dispatch(deleteVideo({ videoId: video._id }));
+                    getChannelStats(dispatch, user._id);
                 }
             } catch (error) {
                 toast.error("Error while deleting video");
@@ -86,7 +91,7 @@ function VideoCard({ video }) {
                 </div>
             </td>
             <td className="border-collapse border-b border-gray-600 px-4 py-3 group-last:border-none">
-                <div className="flex justify-center items-center gap-4">
+                <div className="flex justify-start items-center gap-4">
                     {publishStatus ? (
                         <Link to={`/watchpage/${video._id}`}>
                             <img
@@ -143,12 +148,19 @@ function VideoCard({ video }) {
                     message="Are you sure you want to delete this video? Once deleted, you will not be able to recover it."
                     actionFunction={handleDeleteVideo}
                 />
+                <VideoForm ref={editDialog} video={video} />
                 <div className="flex justify-center gap-4">
                     <button
                         onClick={() => confirmDialog.current.open()}
                         title="Delete video"
                     >
                         <MdDelete className="h-5 w-5 hover:text-red-500" />
+                    </button>
+                    <button
+                        onClick={() => editDialog.current?.open()}
+                        title="Edit video"
+                    >
+                        <MdEdit className="h-5 w-5 hover:text-red-500" />
                     </button>
                 </div>
             </td>

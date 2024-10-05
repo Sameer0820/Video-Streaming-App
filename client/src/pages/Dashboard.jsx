@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setVideos, setStats } from "../store/dashboardSlice";
-import { toast } from "react-toastify";
 import { icons } from "../assets/Icons.jsx";
 import GuestDashboard from "../components/GuestPages/GuestDashboard";
-import axiosInstance from "../utils/axios.helper.js";
 import ChannelStats from "../components/Dashboard/ChannelStats.jsx";
 import VideoPanel from "../components/Dashboard/VideoPanel.jsx";
+import { getChannelStats } from "../hooks/getChannelStats.js";
+import { getChannelVideos } from "../hooks/getChannelVideos.js";
 
 function Dashboard() {
     const dispatch = useDispatch();
@@ -14,38 +13,12 @@ function Dashboard() {
     const [statsloading, setStatsLoading] = useState(true);
     const [videoloading, setVideoLoading] = useState(true);
 
-    const getChannelStats = async () => {
-        try {
-            const response = await axiosInstance.get(
-                `/dashboard/stats/${userData._id}`
-            );
-            if (response?.data?.success) {
-                dispatch(setStats(response.data.data));
-                setStatsLoading(false);
-            }
-        } catch (error) {
-            toast.error("Error getting channel stats");
-            console.log(error);
-        }
-    };
-
-    const getChannelVideos = async () => {
-        try {
-            const response = await axiosInstance.get(`/dashboard/videos`);
-            if (response?.data?.success) {
-                dispatch(setVideos(response.data.data));
-                setVideoLoading(false);
-            }
-        } catch (error) {
-            toast.error("Error getting channel videos");
-            console.log(error);
-        }
-    };
-
     useEffect(() => {
         if (status) {
-            getChannelVideos();
-            getChannelStats();
+            getChannelVideos(dispatch).then(() => setVideoLoading(false));
+            getChannelStats(dispatch, userData._id).then(() =>
+                setStatsLoading(false)
+            );
         }
     }, []);
 

@@ -149,13 +149,14 @@ const getChannelVideos = asyncHandler(async (req, res) => {
                 likesCount: 1,
                 commentsCount: 1,
                 createdAt: 1,
+                description: 1,
                 title: 1,
                 views: 1,
             },
         },
     ]);
 
-    if (!videos || videos.length === 0) {
+    if (!videos) {
         throw new ApiError(404, "No videos found");
     }
 

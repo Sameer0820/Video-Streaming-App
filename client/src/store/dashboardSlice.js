@@ -27,10 +27,18 @@ const dashboardSlice = createSlice({
         setStats: (state, action) => {
             state.stats = action.payload;
         },
+        addVideoStats: (state) => {
+            state.stats.totalVideos = state.stats.totalVideos + 1;
+        },
     },
 });
 
-export const { setVideos, setStats, updateVideoPublishStatus, deleteVideo } =
-    dashboardSlice.actions;
+export const {
+    setVideos,
+    setStats,
+    updateVideoPublishStatus,
+    deleteVideo,
+    addVideoStats,
+} = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

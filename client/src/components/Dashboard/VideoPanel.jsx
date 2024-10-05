@@ -30,7 +30,7 @@ function VideoPanel({ channelVideos }) {
             </div>
 
             <div className="w-full overflow-auto">
-                <table className="w-full min-w-[1200px] border-collapse border text-white">
+                <table className="w-full min-w-[1000px] border-collapse border text-white">
                     <thead>
                         <tr>
                             <th className="border-collapse border-b p-4">
