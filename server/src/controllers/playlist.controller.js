@@ -65,6 +65,9 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
                 as: "videos",
                 pipeline: [
                     {
+                        $match: { isPublished: true },
+                    },
+                    {
                         $project: {
                             thumbnail: 1,
                             views: 1,

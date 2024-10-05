@@ -43,6 +43,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
               ]
             : []),
         {
+            $match: { isPublished: true },
+        },
+        {
             $lookup: {
                 from: "users",
                 localField: "owner",
@@ -115,6 +118,9 @@ const getUserVideos = asyncHandler(async (req, res) => {
             $match: {
                 owner: new mongoose.Types.ObjectId(userId),
             },
+        },
+        {
+            $match: { isPublished: true },
         },
         {
             $sort: {
@@ -200,6 +206,9 @@ const getSubscribedVideos = asyncHandler(async (req, res) => {
                     ),
                 },
             },
+        },
+        {
+            $match: { isPublished: true },
         },
         {
             $sort: {
