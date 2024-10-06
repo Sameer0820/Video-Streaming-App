@@ -15,10 +15,10 @@ function VideoCard({ video, name = true }) {
 
     return (
         <Link to={`/watchpage/${video?._id}`}>
-            <div className="2xl:w-[20vw] md:w-[25vw] w-[90vw] rounded-xl mb-2 mt-2 text-white mx-3 relative p-1 hover:bg-zinc-900">
+            <div className="rounded-xl mt-2 text-white relative p-1 hover:bg-zinc-900">
                 <div className="relative">
                     <img
-                        className="w-full md:h-[15vw] 2xl:h-[12vw] object-cover mb-2 rounded-xl border border-gray-800"
+                        className="w-full h-[36vw] md:h-[24vw] lg:h-[22vw] xl:h-[15vw] 2xl:h-[12vw] object-cover mb-2 rounded-xl border border-gray-800"
                         src={video?.thumbnail}
                         alt={video?.title}
                     />
@@ -27,7 +27,7 @@ function VideoCard({ video, name = true }) {
                     </p>
                 </div>
                 <div className="flex">
-                    <div onClick={handleChannelClick} className="mt-1">
+                    <div onClick={handleChannelClick} className="mt-1 flex-shrink-0">
                         <img
                             className="w-9 h-9 bg-gray-100 rounded-full object-cover"
                             src={video?.owner?.avatar}
@@ -35,7 +35,7 @@ function VideoCard({ video, name = true }) {
                         />
                     </div>
                     <div className="ml-4">
-                        <h2 className="text-lg font-semibold">
+                        <h2 className="text-lg font-semibold line-clamp-2" title={video?.title}>
                             {video?.title}
                         </h2>
                         {name && (

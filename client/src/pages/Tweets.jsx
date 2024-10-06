@@ -6,16 +6,19 @@ import { useForm } from "react-hook-form";
 import Button from "../components/Button.jsx";
 import axiosInstance from "../utils/axios.helper.js";
 import Tweet from "../components/Tweet/TweetCard.jsx";
-import { addTweets } from "../store/tweetsSlice.js";
+import { addTweets, removeTweets } from "../store/tweetsSlice.js";
 import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
 import { TiMessages } from "react-icons/ti";
 import { useLocation } from "react-router-dom";
 import LoginPopup from "../components/Auth/LoginPopup.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function Tweets() {
     const dispatch = useDispatch();
-    const { status} = useSelector((state) => state.auth);
+    const { status } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const [tweetsUpdated, setTweetsUpdated] = useState(false);
     const LoginPopupDialog = useRef();
     const location = useLocation();
@@ -29,9 +32,14 @@ function Tweets() {
 
     const getAllTweets = async () => {
         try {
-            const response = await axiosInstance.get("/tweets");
-            if (response?.data?.success) {
+            const response = await axiosInstance.get(
+                `/tweets?page=${page}&limit=30`
+            );
+            if (response?.data?.data?.length === 30) {
                 dispatch(addTweets(response.data.data));
+            } else {
+                dispatch(addTweets(response.data.data));
+                setHasMore(false);
             }
         } catch (error) {
             console.log("Error while fetching tweets", error);
@@ -46,6 +54,7 @@ function Tweets() {
                 await axiosInstance.post("/tweets", data);
                 reset();
                 setTweetsUpdated((prev) => !prev);
+                setPage(1);
             } catch (error) {
                 toast.error("Couldn't add your tweet. Try again!");
                 console.log("Error while adding tweet", error);
@@ -54,10 +63,17 @@ function Tweets() {
     };
 
     useEffect(() => {
+        if (page === 1) {
+            dispatch(removeTweets());
+        }
         getAllTweets().then(setLoading(false));
-    }, [tweetsUpdated, status]);
+    }, [tweetsUpdated, status, page]);
 
     const tweets = useSelector((state) => state.tweets.tweets);
+
+    const fetchMoreData = () => {
+        setPage((prevPage) => prevPage + 1);
+    };
 
     if (loading) {
         return (
@@ -124,11 +140,23 @@ function Tweets() {
             </form>
             <div className="mt-6 border-b border-gray-400"></div>
             {tweets?.length > 0 ? (
-                <ul className="py-4 px-4">
-                    {tweets.map((tweet) => (
-                        <Tweet key={tweet._id} tweet={tweet} page={true} />
-                    ))}
-                </ul>
+                <InfiniteScroll
+                    dataLength={tweets.length}
+                    next={fetchMoreData}
+                    hasMore={hasMore}
+                    loader={
+                        <div className="flex justify-center h-7 mt-1">
+                            {icons.loading}
+                        </div>
+                    }
+                    scrollableTarget="scrollableDiv"
+                >
+                    <ul className="py-4 px-4">
+                        {tweets.map((tweet) => (
+                            <Tweet key={tweet._id} tweet={tweet} page={true} />
+                        ))}
+                    </ul>
+                </InfiniteScroll>
             ) : (
                 <GuestComponent
                     icon={

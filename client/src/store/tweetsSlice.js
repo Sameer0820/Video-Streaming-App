@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    tweets: null,
+    tweets: [],
 };
 
 const tweetsSlice = createSlice({
@@ -9,7 +9,10 @@ const tweetsSlice = createSlice({
     initialState,
     reducers: {
         addTweets: (state, action) => {
-            state.tweets = action.payload;
+            state.tweets = [...state.tweets, ...action.payload];
+        },
+        removeTweets: (state, action) => {
+            state.tweets = [];
         },
         deleteTweet: (state, action) => {
             state.tweets = state.tweets.filter(
@@ -35,6 +38,6 @@ const tweetsSlice = createSlice({
     },
 });
 
-export const { addTweets, deleteTweet, updateTweet, toggleLike } =
+export const { addTweets, removeTweets, deleteTweet, updateTweet, toggleLike } =
     tweetsSlice.actions;
 export default tweetsSlice.reducer;

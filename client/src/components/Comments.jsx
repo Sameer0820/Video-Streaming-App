@@ -11,10 +11,13 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import LoginPopup from "./Auth/LoginPopup";
 import { toast } from "react-toastify";
 import { icons } from "../assets/Icons.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function Comments({ video }) {
     const { status, userData } = useSelector((state) => state.auth);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const { videoId } = useParams();
     const [comments, setComments] = useState([]);
     const [commentsUpdated, setCommentsUpdated] = useState(false);
@@ -33,10 +36,14 @@ function Comments({ video }) {
 
     const getVideoComments = async () => {
         try {
-            const response = await axiosInstance.get(`/comments/${videoId}`);
-            if (response?.data?.data) {
-                setComments(response.data.data);
-                setLoading(false);
+            const response = await axiosInstance.get(
+                `/comments/${videoId}?page=${page}&limit=10`
+            );
+            if (response?.data?.data.length === 10) {
+                setComments((prev) => [...prev, ...response.data.data]);
+            } else {
+                setComments((prev) => [...prev, ...response.data.data]);
+                setHasMore(false);
             }
         } catch (error) {
             console.log("Error fetching comments", error);
@@ -53,6 +60,7 @@ function Comments({ video }) {
                 });
                 reset();
                 setCommentsUpdated((prev) => !prev);
+                setPage(1);
             } catch (error) {
                 toast.error("Couldn't add comment. Try again!");
                 console.log("Error while adding comment", error);
@@ -64,6 +72,7 @@ function Comments({ video }) {
         try {
             await axiosInstance.delete(`/comments/c/${commentId}`);
             setCommentsUpdated((prev) => !prev);
+            setPage(1);
         } catch (error) {
             toast.error("Couldn't delete comment. Try again!");
             console.log("Error while deleting comment", error);
@@ -77,6 +86,7 @@ function Comments({ video }) {
             });
             setUpdate(null);
             setCommentsUpdated((prev) => !prev);
+            setPage(1);
         } catch (error) {
             toast.error("Couldn't update comment. Try again!");
             console.log("Error while updating comment", error);
@@ -84,8 +94,15 @@ function Comments({ video }) {
     };
 
     useEffect(() => {
-        getVideoComments();
-    }, [videoId, commentsUpdated]);
+        if (page === 1) {
+            setComments([]);
+        }
+        getVideoComments().then(() => setLoading(false));
+    }, [videoId, commentsUpdated, page]);
+
+    const fetchMoreData = () => {
+        setPage((prevPage) => prevPage + 1);
+    };
 
     const toggleCommentLike = async (commentId) => {
         if (!status) {
@@ -151,13 +168,16 @@ function Comments({ video }) {
         };
     }, []);
 
+    if (loading) {
+        return (
+            <span className="flex justify-center mt-20">
+                {icons.bigLoading}
+            </span>
+        );
+    }
+
     return (
         <>
-            {loading && (
-                <span className="flex justify-center mt-20">
-                    {icons.bigLoading}
-                </span>
-            )}
             <div className="border rounded-xl mt-4 ml-1">
                 <div className="px-4 mt-2 rounded-xl">
                     <p className="mt-1 text-lg">
@@ -196,136 +216,154 @@ function Comments({ video }) {
                     </form>
                 </div>
                 <div className="w-full">
-                    {Array.isArray(comments) &&
-                        comments?.length > 0 &&
-                        comments?.map((comment, index) => (
-                            <div
-                                key={comment._id}
-                                className="hover:bg-zinc-900 rounded-xl py-3 px-4"
-                            >
-                                <div className="flex">
-                                    <img
-                                        className="w-9 h-9 rounded-full object-cover"
-                                        src={`${comment?.owner?.avatar}`}
-                                        alt=""
-                                    />
-                                    <div className="px-3 justify-start flex-grow">
-                                        <div className="flex text-gray-300 text-sm">
-                                            <p>@{comment?.owner?.username}</p>
-                                            <p className="ml-2">
-                                                ·{" "}
-                                                {getTimeDistanceToNow(
-                                                    comment?.createdAt
-                                                )}
-                                            </p>
-                                        </div>
-                                        {update === comment._id ? (
-                                            <form
-                                                className="mt-1 flex items-center"
-                                                onSubmit={handleSubmit2(
-                                                    (data) =>
-                                                        handleCommentUpdate(
-                                                            data,
-                                                            comment._id
-                                                        )
-                                                )}
-                                            >
-                                                <input
-                                                    {...register2(
-                                                        "newContent",
-                                                        {
-                                                            required: true,
-                                                        }
-                                                    )}
-                                                    className="mr-2 border-b-[1px] py-1 bg-black/0 text-white outline-none duration-200 focus:border-blue-800 w-full"
-                                                />
-                                                <Button
-                                                    type="submit"
-                                                    className="ml-4 font-semibold text-sm border rounded-lg border-gray-300 flex items-center hover:bg-pink-700"
-                                                    bgColor="bg-pink-600"
-                                                >
-                                                    Update
-                                                </Button>
-                                                <Button
-                                                    onClick={cancelEditing}
-                                                    className="ml-4 font-semibold text-sm border rounded-lg border-gray-300 flex items-center hover:bg-zinc-800"
-                                                    bgColor=""
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </form>
-                                        ) : (
-                                            <div className="mt-1">
-                                                {comment?.content}
-                                            </div>
-                                        )}
-
-                                        <LoginPopup
-                                            ref={LoginLikePopupDialog}
-                                            message="Login to Like Comment..."
-                                            route={location.pathname}
+                    {Array.isArray(comments) && comments?.length > 0 && (
+                        <InfiniteScroll
+                            dataLength={comments.length}
+                            next={fetchMoreData}
+                            hasMore={hasMore}
+                            loader={
+                                <div className="flex justify-center h-7 mt-1">
+                                    {icons.loading}
+                                </div>
+                            }
+                            scrollableTarget="scrollableDiv"
+                        >
+                            {comments?.map((comment, index) => (
+                                <div
+                                    key={comment._id}
+                                    className="hover:bg-zinc-900 rounded-xl py-3 px-4"
+                                >
+                                    <div className="flex">
+                                        <img
+                                            className="w-9 h-9 rounded-full object-cover"
+                                            src={`${comment?.owner?.avatar}`}
+                                            alt=""
                                         />
-                                        <button
-                                            onClick={() =>
-                                                toggleCommentLike(comment._id)
-                                            }
-                                            className={`mt-1 flex items-center text-sm`}
-                                        >
-                                            {comment.isLiked ? (
-                                                <BiSolidLike className="w-4 h-4" />
-                                            ) : (
-                                                <BiLike className="w-4 h-4" />
-                                            )}
-                                            <p className="ml-1">
-                                                {comment?.likesCount}
-                                            </p>
-                                        </button>
-                                    </div>
-                                    {comment?.owner?._id === userData?._id && (
-                                        <div
-                                            ref={(el) =>
-                                                (menuRefs.current[index] = el)
-                                            }
-                                            className="relative"
-                                        >
-                                            <button
-                                                onClick={() =>
-                                                    toggleMenu(comment._id)
-                                                }
-                                                className="p-2 hover:bg-slate-800 hover:rounded-full"
-                                            >
-                                                <BsThreeDotsVertical />
-                                            </button>
-                                            {activeCommentId ===
-                                                comment._id && (
-                                                <div className="absolute left-0 w-24 bg-black rounded-lg shadow-lg text-sm">
-                                                    <button
-                                                        onClick={() =>
-                                                            handleUpdate(
-                                                                comment
-                                                            )
-                                                        }
-                                                        className="block w-full text-left px-4 py-2 hover:bg-slate-900 hover:rounded-lg"
-                                                    >
-                                                        Update
-                                                    </button>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDelete(
+                                        <div className="px-3 justify-start flex-grow">
+                                            <div className="flex text-gray-300 text-sm">
+                                                <p>
+                                                    @{comment?.owner?.username}
+                                                </p>
+                                                <p className="ml-2">
+                                                    ·{" "}
+                                                    {getTimeDistanceToNow(
+                                                        comment?.createdAt
+                                                    )}
+                                                </p>
+                                            </div>
+                                            {update === comment._id ? (
+                                                <form
+                                                    className="mt-1 flex items-center"
+                                                    onSubmit={handleSubmit2(
+                                                        (data) =>
+                                                            handleCommentUpdate(
+                                                                data,
                                                                 comment._id
                                                             )
-                                                        }
-                                                        className="block w-full text-left px-4 py-2 hover:bg-slate-900 hover:rounded-lg"
+                                                    )}
+                                                >
+                                                    <input
+                                                        {...register2(
+                                                            "newContent",
+                                                            {
+                                                                required: true,
+                                                            }
+                                                        )}
+                                                        className="mr-2 border-b-[1px] py-1 bg-black/0 text-white outline-none duration-200 focus:border-blue-800 w-full"
+                                                    />
+                                                    <Button
+                                                        type="submit"
+                                                        className="ml-4 font-semibold text-sm border rounded-lg border-gray-300 flex items-center hover:bg-pink-700"
+                                                        bgColor="bg-pink-600"
                                                     >
-                                                        Delete
-                                                    </button>
+                                                        Update
+                                                    </Button>
+                                                    <Button
+                                                        onClick={cancelEditing}
+                                                        className="ml-4 font-semibold text-sm border rounded-lg border-gray-300 flex items-center hover:bg-zinc-800"
+                                                        bgColor=""
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </form>
+                                            ) : (
+                                                <div className="mt-1">
+                                                    {comment?.content}
                                                 </div>
                                             )}
+
+                                            <LoginPopup
+                                                ref={LoginLikePopupDialog}
+                                                message="Login to Like Comment..."
+                                                route={location.pathname}
+                                            />
+                                            <button
+                                                onClick={() =>
+                                                    toggleCommentLike(
+                                                        comment._id
+                                                    )
+                                                }
+                                                className={`mt-1 flex items-center text-sm`}
+                                            >
+                                                {comment.isLiked ? (
+                                                    <BiSolidLike className="w-4 h-4" />
+                                                ) : (
+                                                    <BiLike className="w-4 h-4" />
+                                                )}
+                                                <p className="ml-1">
+                                                    {comment?.likesCount}
+                                                </p>
+                                            </button>
                                         </div>
-                                    )}
+                                        {comment?.owner?._id ===
+                                            userData?._id && (
+                                            <div
+                                                ref={(el) =>
+                                                    (menuRefs.current[index] =
+                                                        el)
+                                                }
+                                                className="relative"
+                                            >
+                                                <button
+                                                    onClick={() =>
+                                                        toggleMenu(comment._id)
+                                                    }
+                                                    className="p-2 hover:bg-slate-800 hover:rounded-full"
+                                                >
+                                                    <BsThreeDotsVertical />
+                                                </button>
+                                                {activeCommentId ===
+                                                    comment._id && (
+                                                    <div className="absolute right-0 w-24 bg-black rounded-lg shadow-lg text-sm">
+                                                        <button
+                                                            onClick={() =>
+                                                                handleUpdate(
+                                                                    comment
+                                                                )
+                                                            }
+                                                            className="block w-full text-left px-4 py-2 hover:bg-slate-900 hover:rounded-lg"
+                                                        >
+                                                            Update
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    comment._id
+                                                                )
+                                                            }
+                                                            className="block w-full text-left px-4 py-2 hover:bg-slate-900 hover:rounded-lg"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </InfiniteScroll>
+                    )}
                 </div>
             </div>
         </>

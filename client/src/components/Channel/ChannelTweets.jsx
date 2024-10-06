@@ -9,12 +9,16 @@ import { useParams } from "react-router-dom";
 import Button from "../Button.jsx";
 import axiosInstance from "../../utils/axios.helper.js";
 import Tweet from "../Tweet/TweetCard.jsx";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { removeUserTweets } from "../../store/userSlice.js";
 
 function ChannelTweets() {
     const dispatch = useDispatch();
     const { username } = useParams();
     const { status, userData } = useSelector((state) => state.auth);
     const userId = useSelector((state) => state.user.user._id);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [tweetsUpdated, setTweetsUpdated] = useState(false);
 
@@ -26,16 +30,29 @@ function ChannelTweets() {
     } = useForm();
 
     useEffect(() => {
-        getUserTweets(dispatch, userId).then(() => setLoading(false));
-    }, [username, tweetsUpdated]);
+        if (page === 1) {
+            dispatch(removeUserTweets());
+        }
+        getUserTweets(dispatch, userId, page).then((res) => {
+            setLoading(false);
+            if (res.data.length !== 30) {
+                setHasMore(false);
+            }
+        });
+    }, [username, tweetsUpdated, page]);
 
     const tweets = useSelector((state) => state.user.userTweets);
+
+    const fetchMoreData = () => {
+        setPage((prevPage) => prevPage + 1);
+    };
 
     const addTweet = async (data) => {
         try {
             await axiosInstance.post("/tweets", data);
             reset();
             setTweetsUpdated((prev) => !prev);
+            setPage(1);
         } catch (error) {
             toast.error("Couldn't add your tweet. Try again!");
             console.log("Error while adding tweet", error);
@@ -102,11 +119,23 @@ function ChannelTweets() {
                     </div>
                 </form>
                 {tweets?.length > 0 ? (
-                    <ul className="py-4">
-                        {tweets.map((tweet) => (
-                            <Tweet key={tweet._id} tweet={tweet} />
-                        ))}
-                    </ul>
+                    <InfiniteScroll
+                        dataLength={tweets.length}
+                        next={fetchMoreData}
+                        hasMore={hasMore}
+                        loader={
+                            <div className="flex justify-center h-7 mt-1">
+                                {icons.loading}
+                            </div>
+                        }
+                        scrollableTarget="scrollableDiv"
+                    >
+                        <ul className="py-4">
+                            {tweets.map((tweet) => (
+                                <Tweet key={tweet._id} tweet={tweet} />
+                            ))}
+                        </ul>
+                    </InfiniteScroll>
                 ) : (
                     <ChannelEmptyTweet />
                 )}
@@ -116,11 +145,23 @@ function ChannelTweets() {
         return (
             <>
                 {tweets?.length > 0 ? (
-                    <ul className="py-4">
-                        {tweets.map((tweet) => (
-                            <Tweet key={tweet._id} tweet={tweet} />
-                        ))}
-                    </ul>
+                    <InfiniteScroll
+                        dataLength={tweets.length}
+                        next={fetchMoreData}
+                        hasMore={hasMore}
+                        loader={
+                            <div className="flex justify-center h-7 mt-1">
+                                {icons.loading}
+                            </div>
+                        }
+                        scrollableTarget="scrollableDiv"
+                    >
+                        <ul className="py-4">
+                            {tweets.map((tweet) => (
+                                <Tweet key={tweet._id} tweet={tweet} />
+                            ))}
+                        </ul>
+                    </InfiniteScroll>
                 ) : (
                     <ChannelEmptyTweet />
                 )}

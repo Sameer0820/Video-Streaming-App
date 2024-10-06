@@ -1,6 +1,6 @@
 import Navbar from "./components/Navbar/Navbar";
 import { Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import { Bounce, ToastContainer } from "react-toastify";
@@ -46,7 +46,7 @@ function App() {
                 <div>
                     <Sidebar />
                 </div>
-                <main className="overflow-y-auto h-full w-full">
+                <main className="overflow-y-auto h-full w-full" id="scrollableDiv">
                     <Outlet />
                 </main>
             </div>

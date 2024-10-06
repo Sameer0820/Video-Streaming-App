@@ -101,6 +101,8 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
     const likedVideos = await Like.aggregate([
         {
             $match: {
@@ -160,6 +162,12 @@ const getLikedVideos = asyncHandler(async (req, res) => {
             $sort: {
                 createdAt: -1,
             },
+        },
+        {
+            $skip: (page - 1) * limit,
+        },
+        {
+            $limit: parseInt(limit),
         },
     ]);
 

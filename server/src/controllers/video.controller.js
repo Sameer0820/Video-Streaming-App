@@ -96,7 +96,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         },
     ]);
 
-    if (!videos?.length) {
+    if (!videos) {
         throw new ApiError(404, "No videos found for given query");
     }
 

@@ -2,11 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: null,
-    userVideo: null,
+    userVideo: [],
     userPlaylist: null,
-    userTweets: null,
-    userLikedVideos: null,
-    userHistory: null,
+    userTweets: [],
+    userLikedVideos: [],
+    userHistory: [],
     userSubscribed: null,
 };
 
@@ -18,19 +18,34 @@ const userSlice = createSlice({
             state.user = action.payload;
         },
         addUserVideo: (state, action) => {
-            state.userVideo = action.payload;
+            state.userVideo = [...state.userVideo, ...action.payload];
+        },
+        removerUserVideo: (state) => {
+            state.userVideo = [];
         },
         addUserPlaylist: (state, action) => {
             state.userPlaylist = action.payload;
         },
         addUserTweets: (state, action) => {
-            state.userTweets = action.payload;
+            state.userTweets = [...state.userTweets, ...action.payload];
+        },
+        removeUserTweets: (state, action) => {
+            state.userTweets = [];
         },
         addUserLikedVideos: (state, action) => {
-            state.userLikedVideos = action.payload;
+            state.userLikedVideos = [
+                ...state.userLikedVideos,
+                ...action.payload,
+            ];
+        },
+        removeUserLikedVideos: (state) => {
+            state.userLikedVideos = [];
         },
         addUserHistory: (state, action) => {
-            state.userHistory = action.payload;
+            state.userHistory = [...state.userHistory, ...action.payload];
+        },
+        removeUserHistory: (state) => {
+            state.userHistory = [];
         },
         addUserSubscribed: (state, action) => {
             state.userSubscribed = action.payload;
@@ -53,10 +68,14 @@ const userSlice = createSlice({
 export const {
     addUser,
     addUserVideo,
+    removerUserVideo,
     addUserPlaylist,
     addUserTweets,
+    removeUserTweets,
     addUserLikedVideos,
+    removeUserLikedVideos,
     addUserHistory,
+    removeUserHistory,
     addUserSubscribed,
     toggleUserSubscribe,
 } = userSlice.actions;

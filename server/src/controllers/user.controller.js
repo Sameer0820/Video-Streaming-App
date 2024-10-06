@@ -448,6 +448,8 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 });
 
 const getWatchHistory = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+
     const user = await User.aggregate([
         {
             $match: {
@@ -492,6 +494,12 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                         $sort: {
                             updatedAt: -1,
                         },
+                    },
+                    {
+                        $skip: (page - 1) * limit,
+                    },
+                    {
+                        $limit: parseInt(limit),
                     },
                 ],
             },

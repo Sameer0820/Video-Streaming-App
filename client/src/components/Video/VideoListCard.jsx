@@ -34,7 +34,7 @@ function VideoListCard({
             <Link to={`/watchpage/${video?._id}`}>
                 <div className={`${paddingY} hover:bg-zinc-900 rounded-lg`}>
                     <div className={`text-white ${marginLeft} flex`}>
-                        <div className="relative">
+                        <div className="relative flex-shrink-0">
                             <img
                                 className={`${imgWidth} ${imgHeight} object-cover rounded-xl`}
                                 src={video?.thumbnail}
@@ -46,7 +46,8 @@ function VideoListCard({
                         </div>
                         <div className={`${marginLeft2}`}>
                             <h1
-                                className={`${titleFont} ${titleWidth} ${titleSize}`}
+                                title={video?.title}
+                                className={`${titleFont} ${titleWidth} ${titleSize} line-clamp-1`}
                             >
                                 {video?.title}
                             </h1>

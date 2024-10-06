@@ -19,6 +19,17 @@ const getVideoComments = asyncHandler(async (req, res) => {
             },
         },
         {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $skip: (page - 1) * limit,
+        },
+        {
+            $limit: parseInt(limit),
+        },
+        {
             $lookup: {
                 from: "users",
                 localField: "owner",
@@ -75,17 +86,6 @@ const getVideoComments = asyncHandler(async (req, res) => {
                 owner: 1,
                 createdAt: 1,
             },
-        },
-        {
-            $sort: {
-                createdAt: -1,
-            },
-        },
-        {
-            $skip: (page - 1) * limit,
-        },
-        {
-            $limit: parseInt(limit),
         },
     ]);
 

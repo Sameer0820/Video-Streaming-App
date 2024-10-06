@@ -66,6 +66,7 @@ function VideoForm({ video = false }, ref) {
             await axiosInstance.post("/videos", formData).then(() => {
                 uploadingDialog.current.close();
                 successDialog.current.open();
+                reset();
                 dispatch(addVideoStats());
                 getChannelVideos(dispatch);
                 toast.success("Video uploaded successfully");
@@ -90,6 +91,7 @@ function VideoForm({ video = false }, ref) {
                 .then(() => {
                     uploadingDialog.current.close();
                     successDialog.current.open();
+                    reset();
                     getChannelVideos(dispatch);
                 });
         } catch (error) {

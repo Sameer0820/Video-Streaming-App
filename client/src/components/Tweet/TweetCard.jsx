@@ -7,6 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import Button from "../Button";
 import LoginPopup from "../Auth/LoginPopup";
 import { getUserTweets } from "../../hooks/getUserTweets";
+import { removeUserTweets } from "../../store/userSlice";
 import { useForm } from "react-hook-form";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -34,6 +35,7 @@ function Tweet({ tweet, page = false }) {
                 if (page) {
                     dispatch(deleteTweet(tweet._id));
                 } else {
+                    dispatch(removeUserTweets());
                     getUserTweets(dispatch, userData._id);
                 }
             });
@@ -53,6 +55,7 @@ function Tweet({ tweet, page = false }) {
                     if (page) {
                         dispatch(updateTweet(res.data.data));
                     } else {
+                        dispatch(removeUserTweets());
                         getUserTweets(dispatch, userData._id);
                     }
                 });

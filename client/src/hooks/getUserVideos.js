@@ -1,11 +1,19 @@
 import axiosInstance from "../utils/axios.helper";
 import { addUserVideo } from "../store/userSlice";
 
-export const getUserVideos = async (dispatch, userId, sortType) => {
+export const getUserVideos = async (
+    dispatch,
+    userId,
+    sortType,
+    page = 1,
+    limit = 8
+) => {
     try {
         const response = await axiosInstance.get(`/videos/c/${userId}`, {
             params: {
                 sortType: sortType,
+                page: page,
+                limit: limit,
             },
         });
         if (response?.data?.data) {
