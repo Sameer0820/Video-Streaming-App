@@ -20,7 +20,8 @@ function VideoContainer() {
                     ...prevVideos,
                     ...response.data.data,
                 ]);
-            } else {
+            }
+            if(response?.data?.data?.length !== 12){
                 setHasMore(false);
             }
         } catch (error) {
