@@ -13,15 +13,17 @@ function VideoContainer() {
     const getData = async (page) => {
         try {
             const response = await axiosInstance.get(
-                `/videos?page=${page}&limit=12`
+                `/videos?page=${page}&limit=20`
             );
             if (response?.data?.data?.length > 0) {
                 setVideos((prevVideos) => [
                     ...prevVideos,
                     ...response.data.data,
                 ]);
-            }
-            if(response?.data?.data?.length !== 12){
+                if (response.data.data.length !== 20) {
+                    setHasMore(false);
+                }
+            } else {
                 setHasMore(false);
             }
         } catch (error) {
@@ -63,7 +65,7 @@ function VideoContainer() {
             >
                 <div className="overflow-hidden mb-2 mx-2">
                     <div
-                        className={`grid grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))] gap-2 ${
+                        className={`grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 ${
                             videos.length < 4 &&
                             "grid-cols-[repeat(auto-fit,_minmax(300px,0.34fr))] 2xl:grid-cols-[repeat(auto-fit,_minmax(300px,0.24fr))]"
                         }`}

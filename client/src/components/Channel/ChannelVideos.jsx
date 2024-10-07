@@ -21,7 +21,7 @@ function ChannelVideos() {
         }
         getUserVideos(dispatch, userId, sortType, page).then((res) => {
             setLoading(false);
-            if (res.data.length !== 8) {
+            if (res.data.length !== 10) {
                 setHasMore(false);
             }
         });
@@ -87,7 +87,7 @@ function ChannelVideos() {
                     </button>
                 </div>
                 <div
-                    className={`grid grid-cols-[repeat(auto-fit,_minmax(350px,_1fr))] gap-2 ${
+                    className={`grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-2 ${
                         videos?.length < 4 &&
                         "grid-cols-[repeat(auto-fit,_minmax(300px,0.34fr))] 2xl:grid-cols-[repeat(auto-fit,_minmax(300px,0.24fr))]"
                     }`}
