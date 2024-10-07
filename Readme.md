@@ -4,7 +4,7 @@
 
 ## 🚧 Project Status
 
-### The project is complete but new features and improvements are can be added gradually.
+### The project is complete but new features and improvements can be added gradually.
 
 ## 🚀 Features
 
