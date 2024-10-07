@@ -206,7 +206,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         },
     ]);
 
-    if (!playlist) {
+    if (!playlist.length) {
         throw new ApiError(500, "Error while fetching playlist");
     }
 

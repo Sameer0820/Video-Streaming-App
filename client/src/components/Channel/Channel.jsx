@@ -10,23 +10,42 @@ import { useDispatch, useSelector } from "react-redux";
 import { icons } from "../../assets/Icons.jsx";
 import { getUserProfile } from "../../hooks/getUserProfile";
 import { MdOutlineEdit } from "react-icons/md";
+import { FiVideoOff } from "react-icons/fi";
 import Button from "../Button.jsx";
 import { FaBell, FaCheckCircle } from "react-icons/fa";
 import axiosInstance from "../../utils/axios.helper";
 import LoginPopup from "../Auth/LoginPopup.jsx";
+import GuestComponent from "../GuestPages/GuestComponent.jsx";
 
 function Channel() {
     const dispatch = useDispatch();
     const { username } = useParams();
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
+    const [error, setError] = useState("");
     const { status, userData } = useSelector((state) => state.auth);
     const LoginPopupDialog = useRef();
     const location = useLocation();
 
     useEffect(() => {
+        setError("");
         getUserProfile(dispatch, username).then((res) => {
-            setProfile(res.data);
+            if (res?.data) {
+                setProfile(res?.data);
+            } else {
+                setError(
+                    <GuestComponent
+                        title="Channel does not exist"
+                        subtitle="There is no channel for given username. Check the username again."
+                        icon={
+                            <span className="w-full h-full flex items-center p-4">
+                                <FiVideoOff className="w-28 h-28" />
+                            </span>
+                        }
+                        guest={false}
+                    />
+                );
+            }
         });
     }, [status, username]);
 
@@ -49,6 +68,10 @@ function Channel() {
             console.log(error);
         }
     };
+
+    if (error) {
+        return error;
+    }
 
     return profile ? (
         <section className="relative w-full pb-[70px] sm:ml-[70px] sm:pb-0 lg:ml-0">

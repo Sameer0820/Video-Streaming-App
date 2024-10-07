@@ -23,6 +23,7 @@ import PlaylistVideos from "./components/Playlist/PlaylistVideos.jsx";
 import Tweets from "./pages/Tweets.jsx";
 import Subscriptions from "./pages/Subscriptions.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import PageNotFound from "./components/PageNotFound.jsx";
 
 const router = createBrowserRouter([
     {
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
                 element: <Dashboard />,
             },
         ],
+    },
+    {
+        path: "*",
+        element: <PageNotFound />,
     },
 ]);
 

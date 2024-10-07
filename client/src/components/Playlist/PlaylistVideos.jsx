@@ -9,10 +9,12 @@ import axiosInstance from "../../utils/axios.helper";
 import ConfirmPopup from "../ConfirmPopup.jsx";
 import { toast } from "react-toastify";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdOutlineFeaturedPlayList } from "react-icons/md";
 import { setPlaylist } from "../../store/playlistSlice.js";
 import { removeVideoPlaylist } from "../../store/playlistSlice.js";
 import VideoListCard from "../Video/VideoListCard.jsx";
 import { MdDelete } from "react-icons/md";
+import GuestComponent from "../GuestPages/GuestComponent.jsx";
 
 function PlaylistVideos() {
     const { playlistId } = useParams();
@@ -22,18 +24,32 @@ function PlaylistVideos() {
     const ref = useRef();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
     const [menu, setMenu] = useState(false);
     const location = useLocation();
 
     const { status, userData } = useSelector((state) => state.auth);
 
     const getPlaylistById = async () => {
+        setError("");
         try {
             const response = await axiosInstance.get(`/playlist/${playlistId}`);
             if (response?.data?.success) {
                 dispatch(setPlaylist(response.data.data));
             }
         } catch (error) {
+            setError(
+                <GuestComponent
+                    title="Playlist does not exist"
+                    subtitle="There is no playlist for give playlistId. It may have been moved or deleted."
+                    icon={
+                        <span className="w-full h-full flex items-center p-4">
+                            <MdOutlineFeaturedPlayList className="w-28 h-28" />
+                        </span>
+                    }
+                    guest={false}
+                />
+            );
             console.log("Error while fetching playlist", error);
         }
     };
@@ -97,6 +113,10 @@ function PlaylistVideos() {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    if (error) {
+        return error;
+    }
 
     if (loading) {
         return (
@@ -222,7 +242,10 @@ function PlaylistVideos() {
                         </div>
                     )}
                     {playlist?.videos?.map((video) => (
-                        <div className="flex hover:bg-zinc-900 rounded-lg" key={video._id}>
+                        <div
+                            className="flex hover:bg-zinc-900 rounded-lg"
+                            key={video._id}
+                        >
                             <VideoListCard
                                 video={video}
                                 imgWidth="w-[300px]"

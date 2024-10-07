@@ -324,7 +324,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
 
-    if (!videoId) {
+    if (!videoId || !mongoose.isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid video Id");
     }
 
@@ -426,7 +426,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         },
     ]);
 
-    if (!video) {
+    if (!video.length) {
         throw new ApiError(404, "Video does not exists");
     }
 
