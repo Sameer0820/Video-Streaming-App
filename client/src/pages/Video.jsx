@@ -9,6 +9,7 @@ import VideoInfo from "../components/Video/VideoInfo.jsx";
 import Comments from "../components/Comments.jsx";
 import GuestComponent from "../components/GuestPages/GuestComponent.jsx";
 import { IoPlayCircleOutline } from "react-icons/io5";
+import { icons } from "../assets/Icons.jsx";
 
 function Video() {
     const dispatch = useDispatch();
