@@ -67,6 +67,7 @@ function ChannelVideos() {
                         onClick={() => {
                             setSortType("desc");
                             setPage(1);
+                            setLoading(true);
                         }}
                     >
                         Latest
@@ -81,6 +82,7 @@ function ChannelVideos() {
                         onClick={() => {
                             setSortType("asc");
                             setPage(1);
+                            setLoading(true);
                         }}
                     >
                         Oldest

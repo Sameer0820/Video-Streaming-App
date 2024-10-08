@@ -66,7 +66,7 @@ function Tweets() {
         if (page === 1) {
             dispatch(removeTweets());
         }
-        getAllTweets().then(setLoading(false));
+        getAllTweets().then(() => setLoading(false));
     }, [tweetsUpdated, status, page]);
 
     const tweets = useSelector((state) => state.tweets.tweets);

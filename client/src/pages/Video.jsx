@@ -70,7 +70,9 @@ function Video() {
     return (
         <div>
             {loading ? (
-                <p className="flex text-xl justify-center mt-96">Loading...</p>
+                <span className="flex justify-center mt-20">
+                    {icons.bigLoading}
+                </span>
             ) : (
                 <div className="flex">
                     <div className="w-[70%] p-4">

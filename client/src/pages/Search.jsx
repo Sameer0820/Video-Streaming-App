@@ -58,6 +58,7 @@ function Search() {
             setVideos([]);
             setPage(1);
             setHasMore(true);
+            setLoading(true);
         }
         fetchVideos(1);
         setPrevQuery(query);

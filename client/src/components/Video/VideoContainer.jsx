@@ -8,6 +8,7 @@ import { icons } from "../../assets/Icons.jsx";
 function VideoContainer() {
     const [videos, setVideos] = useState([]);
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(true);
 
     const getData = async (page) => {
@@ -20,6 +21,7 @@ function VideoContainer() {
                     ...prevVideos,
                     ...response.data.data,
                 ]);
+                setLoading(false);
                 if (response.data.data.length !== 20) {
                     setHasMore(false);
                 }
@@ -39,7 +41,15 @@ function VideoContainer() {
         setPage((prevPage) => prevPage + 1);
     };
 
-    if (!videos || videos.length === 0) {
+    if (loading) {
+        return (
+            <span className="flex justify-center mt-20">
+                {icons.bigLoading}
+            </span>
+        );
+    }
+
+    if (videos.length === 0) {
         return (
             <div className="flex justify-center mt-[30vh]">
                 <div className="flex flex-col items-center">

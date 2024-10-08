@@ -53,6 +53,7 @@ function ChannelTweets() {
             reset();
             setTweetsUpdated((prev) => !prev);
             setPage(1);
+            setLoading(true);
         } catch (error) {
             toast.error("Couldn't add your tweet. Try again!");
             console.log("Error while adding tweet", error);
