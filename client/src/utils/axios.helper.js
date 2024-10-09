@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { parseErrorMessage } from "./parseErrorMsg";
 
 const axiosInstance = axios.create({
-    baseURL: "https://streamify-rose-six.vercel.app/api/v1",
+    baseURL: "https://video-streaming-app-wme1.onrender.com/api/v1",
     withCredentials: true,
 });
 
