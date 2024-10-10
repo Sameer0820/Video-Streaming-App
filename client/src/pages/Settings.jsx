@@ -10,6 +10,7 @@ import Button from "../components/Button";
 import EditPersonalInfo from "../components/Settings/EditPersonalInfo";
 import EditChannelInfo from "../components/Settings/EditChannelInfo";
 import ChangePassword from "../components/Settings/ChangePassword";
+import streamify_cover from "../assets/Streamify_Cover.png"
 
 function Settings() {
     const userData = useSelector((state) => state.auth.userData);
@@ -77,7 +78,7 @@ function Settings() {
             <div className="relative min-h-[150px] w-full pt-[20%]">
                 <div className="absolute inset-0 overflow-hidden">
                     <img
-                        src={userData.coverImage}
+                        src={userData.coverImage || streamify_cover}
                         alt="cover-image"
                         className="object-cover"
                     />
