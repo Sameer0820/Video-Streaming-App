@@ -62,7 +62,14 @@ function EditPersonalInfo() {
                             placeholder="Enter your full name"
                             required
                             defaultValue={userData.fullName}
-                            {...register("fullName", { required: true })}
+                            {...register("fullName", {
+                                required: true,
+                                maxLength: {
+                                    value: 25,
+                                    message:
+                                        "Full name cannot exceed 25 characters",
+                                },
+                            })}
                             onChange={(e) =>
                                 setData((prevData) => ({
                                     ...prevData,
@@ -70,6 +77,11 @@ function EditPersonalInfo() {
                                 }))
                             }
                         />
+                        {errors.fullName && (
+                            <p className="text-red-600 px-2 mt-1">
+                                {errors.fullName.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="w-full px-4 py-2">

@@ -16,7 +16,12 @@ function EditChannelInfo() {
     };
     const [data, setData] = useState(defaultValues);
 
-    const { register, handleSubmit, reset } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const handleSaveChange = async (newData) => {
         if (defaultValues.username === newData?.username) {
@@ -60,12 +65,19 @@ function EditChannelInfo() {
                             </p>
                             <input
                                 type="text"
-                                id="fullname"
+                                id="username"
                                 className="w-full px-2 py-1.5 bg-transparent"
                                 placeholder="Enter your username"
                                 required
                                 defaultValue={userData.username}
-                                {...register("username", { required: true })}
+                                {...register("username", {
+                                    required: true,
+                                    maxLength: {
+                                        value: 25,
+                                        message:
+                                            "User name cannot exceed 25 characters",
+                                    },
+                                })}
                                 onChange={(e) =>
                                     setData((prevData) => ({
                                         ...prevData,
@@ -74,6 +86,11 @@ function EditChannelInfo() {
                                 }
                             />
                         </div>
+                        {errors.username && (
+                            <p className="text-red-600 px-2 mt-1">
+                                {errors.username.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="w-full px-4 py-2">
@@ -88,7 +105,13 @@ function EditChannelInfo() {
                                 className="w-full px-2 py-1.5 border rounded-lg bg-transparent"
                                 rows="3"
                                 defaultValue={userData.description}
-                                {...register("description")}
+                                {...register("description", {
+                                    maxLength: {
+                                        value: 200,
+                                        message:
+                                            "Description cannot exceed 200 characters",
+                                    },
+                                })}
                                 onChange={(e) =>
                                     setData((prevData) => ({
                                         ...prevData,
@@ -97,6 +120,11 @@ function EditChannelInfo() {
                                 }
                             />
                         </div>
+                        {errors.description && (
+                            <p className="text-red-600 px-2 mt-1">
+                                {errors.description.message}
+                            </p>
+                        )}
                     </div>
                     <hr className="border border-gray-300 mt-1" />
                     <div className="flex items-center justify-end gap-4 p-4">

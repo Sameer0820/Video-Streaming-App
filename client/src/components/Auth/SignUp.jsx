@@ -82,11 +82,23 @@ function SignUp() {
                         required
                         className="px-2 rounded-lg"
                         placeholder="Enter your full name"
-                        {...register("fullName", { required: true })}
+                        {...register("fullName", {
+                            required: true,
+                            maxLength: {
+                                value: 25,
+                                message:
+                                    "Full name cannot exceed 25 characters",
+                            },
+                        })}
                     />
                     {errors.fullName?.type === "required" && (
                         <p className="text-red-600 px-2 mt-1">
                             Full name is required
+                        </p>
+                    )}
+                    {errors.fullName && (
+                        <p className="text-red-600 px-2 mt-1">
+                            {errors.fullName.message}
                         </p>
                     )}
                     <Input
@@ -97,11 +109,21 @@ function SignUp() {
                         placeholder="Choose your username"
                         {...register("username", {
                             required: true,
+                            maxLength: {
+                                value: 25,
+                                message:
+                                    "User name cannot exceed 25 characters",
+                            },
                         })}
                     />
                     {errors.username?.type === "required" && (
                         <p className="text-red-600 px-2 mt-1">
                             Username is required
+                        </p>
+                    )}
+                    {errors.username && (
+                        <p className="text-red-600 px-2 mt-1">
+                            {errors.username.message}
                         </p>
                     )}
                     <Input

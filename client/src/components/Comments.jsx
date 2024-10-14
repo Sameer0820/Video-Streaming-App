@@ -287,7 +287,7 @@ function Comments({ video }) {
                                                     </Button>
                                                 </form>
                                             ) : (
-                                                <div className="mt-1">
+                                                <div className="mt-1 break-words break-all">
                                                     {comment?.content}
                                                 </div>
                                             )}

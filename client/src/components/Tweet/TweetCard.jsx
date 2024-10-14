@@ -174,7 +174,7 @@ function Tweet({ tweet, page = false }) {
                         </Button>
                     </form>
                 ) : (
-                    <div className="mt-1">{tweet?.content}</div>
+                    <div className="mt-1 break-words break-all">{tweet?.content}</div>
                 )}
                 <LoginPopup
                     ref={LoginLikePopupDialog}
