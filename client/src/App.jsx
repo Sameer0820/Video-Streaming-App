@@ -46,7 +46,7 @@ function App() {
                 <div>
                     <Sidebar />
                 </div>
-                <main className="overflow-y-auto h-full w-full" id="scrollableDiv">
+                <main className="overflow-y-auto h-full w-full scrollbar-hide" id="scrollableDiv">
                     <Outlet />
                 </main>
             </div>
